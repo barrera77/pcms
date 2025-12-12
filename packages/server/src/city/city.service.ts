@@ -26,8 +26,17 @@ export class CityService {
 
     return createdCity.save();
   }
+
   async findAll(): Promise<City[]> {
     return this.cityModel.find().populate('province').exec();
+  }
+
+  async findById(id: string): Promise<City> {
+    const city = await this.cityModel.findById(id).exec();
+    if (!city) {
+      throw new NotFoundException('City not found');
+    }
+    return city;
   }
 
   async remove(id: string): Promise<City> {
