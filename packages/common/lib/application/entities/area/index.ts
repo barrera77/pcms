@@ -1,0 +1,1 @@
+export { IArea } from "./area";

@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateAreaDto {
   @ApiProperty({ description: 'Name of the area' })
@@ -13,12 +19,17 @@ export class CreateAreaDto {
 
   @ApiProperty({
     description: 'MongoDB ID of the employee that manages this area',
+    required: false,
   })
   @IsMongoId()
+  @IsOptional()
   managerId?: string;
 
   @ApiProperty({
     description: 'MongoDB IDs of the techs assigned to this area',
+    required: false,
   })
-  techIds: string[];
+  @IsArray()
+  @IsOptional()
+  techIds?: string[];
 }

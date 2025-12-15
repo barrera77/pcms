@@ -32,7 +32,7 @@ export class EmployeeService {
     return createdEmployee.save();
   }
   async findAll(): Promise<Employee[]> {
-    return this.employeeModel.find().populate('employee').exec();
+    return this.employeeModel.find().populate('department').exec();
   }
 
   async findByName(name: string): Promise<Employee | null> {

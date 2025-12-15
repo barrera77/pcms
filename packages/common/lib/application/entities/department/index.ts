@@ -1,0 +1,1 @@
+export { IDepartment } from "./department";

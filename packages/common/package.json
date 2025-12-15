@@ -1,0 +1,40 @@
+{
+  "name": "@pcms/pcms-common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/pcms-core.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/lodash": "4.17.5",
+    "@types/node": "^20.14.2",
+    "axios": "1.13.2",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.1",
+    "cookie": "^0.7.2",
+    "date-fns": "^4.1.0",
+    "exponential-backoff": "3.1.1",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.1",
+    "set-cookie-parser": "^2.6.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "util": "^0.12.5"
+  },
+  "keywords": [],
+  "author": "barrera77",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "eslint": "^9.39.2",
+    "jest": "^30.2.0",
+    "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}
