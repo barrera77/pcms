@@ -8,4 +8,5 @@ export interface IEmployee<T = string> extends IBaseEntity {
   phone: string;
   email: string;
   role: EmployeeRole;
+  userId?: T;
 }

@@ -3,7 +3,7 @@ import { CityService } from 'src/city/city.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateCityDto } from 'src/city/dto/create-city.dto';
 
-@ApiTags('cities')
+@ApiTags('Cities')
 @Controller('cities')
 export class CityController {
   constructor(private readonly cityService: CityService) {}

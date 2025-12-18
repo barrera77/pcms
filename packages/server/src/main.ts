@@ -7,7 +7,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('PCMS API')
-    .setDescription('API for managing reference data and reports')
+    .setDescription('Pest Control Management System')
     .setVersion('1.0')
     .build();
 

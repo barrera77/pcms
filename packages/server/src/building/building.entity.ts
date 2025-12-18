@@ -10,7 +10,7 @@ export class Building extends BaseEntity {
   name: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Area' })
-  areaId: string;
+  areaId: Types.ObjectId;
 
   @Prop({ required: true })
   numOfUnits: number;

@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { AreaService } from 'src/area/area.service';
 import { Building, BuildingDocument } from 'src/building/building.entity';
 import { CreateBuildingDto } from 'src/building/dto/create-building.dto';
+import { UpdateBuildingDto } from 'src/building/dto/update-building.dto';
 
 @Injectable()
 export class BuildingService {
@@ -35,5 +36,31 @@ export class BuildingService {
 
   async findByName(name: string): Promise<Building | null> {
     return this.buildingModel.findOne({ name }).populate('building').exec();
+  }
+
+  async findByArea(area: string): Promise<Building | null> {
+    return this.buildingModel.findOne({ area }).populate('department').exec();
+  }
+
+  async update(id: string, dto: UpdateBuildingDto): Promise<Building> {
+    const updated = await this.buildingModel.findByIdAndUpdate(id, dto, {
+      new: true,
+    });
+
+    if (!updated) {
+      throw new NotFoundException('Building not found');
+    }
+    return updated;
+  }
+
+  async remove(id: string): Promise<Building> {
+    const building = await this.buildingModel.findById(id);
+
+    if (!building) {
+      throw new NotFoundException('Building nort found');
+    }
+    building.isInactive = true;
+    building.inactiveAt = new Date();
+    return building.save();
   }
 }

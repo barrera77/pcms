@@ -1,1 +1,1 @@
-export { IBuilding } from "./building ";
+export { IBuilding } from "./building";
