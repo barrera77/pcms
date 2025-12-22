@@ -7,7 +7,13 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiOkResponse,
+  ApiNotFoundResponse,
+} from '@nestjs/swagger';
 import { AreaService } from 'src/area/area.service';
 import { CreateAreaDto } from 'src/area/dto/create-area.dto';
 import { UpdateAreaDto } from 'src/area/dto/update-area.dto';
@@ -30,37 +36,35 @@ export class AreaController {
 
   @Get()
   @ApiOperation({ summary: 'List all areas' })
-  @ApiResponse({ status: 200, description: 'Returns a list of all areas' })
+  @ApiOkResponse({ description: 'List of areas returned succesfully' })
   findAll() {
     return this.areaService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get an area by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns the area with the specified ID',
+  @ApiOkResponse({
+    description: 'Area retrieved successfully',
   })
-  @ApiResponse({ status: 404, description: 'Area not found' })
+  @ApiNotFoundResponse({ description: 'Area not found' })
   findOne(@Param('id') id: string) {
     return this.areaService.findById(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update an existing area' })
-  @ApiResponse({
-    status: 200,
-    description: 'The area was successfully updated',
+  @ApiOkResponse({
+    description: 'Area updated successfully ',
   })
-  @ApiResponse({ status: 404, description: 'Area not found' })
+  @ApiNotFoundResponse({ description: 'Area not found' })
   update(@Param('id') id: string, @Body() dto: UpdateAreaDto) {
     return this.areaService.update(id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Soft delete an area' })
-  @ApiResponse({ status: 200, description: 'The area was marked as inactive' })
-  @ApiResponse({ status: 404, description: 'Area not found' })
+  @ApiOkResponse({ description: 'Area marked as inactive successfully' })
+  @ApiNotFoundResponse({ description: 'Area not found' })
   remove(@Param('id') id: string) {
     return this.areaService.remove(id);
   }

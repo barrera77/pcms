@@ -7,8 +7,17 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateEmployeeDto } from 'src/employee/dto/create-employee.dto';
+import { EmployeeDto } from 'src/employee/dto/employee-output.dto';
 import { UpdateEmployeeDto } from 'src/employee/dto/update-employee.dto';
 import { EmployeeService } from 'src/employee/employee.service';
 
@@ -19,49 +28,55 @@ export class EmployeeController {
 
   @Post()
   @ApiOperation({ summary: 'Add employees' })
-  @ApiResponse({ status: 201, description: 'Employee added succesfully' })
-  async create(@Body() dto: CreateEmployeeDto) {
+  @ApiCreatedResponse({
+    description: 'Employee added succesfully',
+    type: EmployeeDto,
+  })
+  create(@Body() dto: CreateEmployeeDto) {
     return this.employeeService.create(dto);
   }
 
   @Get()
   @ApiOperation({ summary: 'List all employees' })
-  @ApiResponse({ status: 200, description: 'List of employees' })
+  @ApiOkResponse({ description: 'List of employees', type: [EmployeeDto] })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async findAll() {
     return this.employeeService.findAll();
   }
 
   @Get(':name')
   @ApiOperation({ summary: 'List of employees by name' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns a list of employees that match the provided name',
+  @ApiOkResponse({
+    description: 'List of employees by name returned succesfully',
   })
-  async findByName(@Param('name') name: string) {
+  @ApiNotFoundResponse({ description: 'Area not found' })
+  findByName(@Param('name') name: string) {
     return this.employeeService.findByName(name);
   }
 
   @Get(':role')
   @ApiOperation({ summary: 'List of employees by role' })
-  @ApiResponse({
-    status: 200,
-    description: 'Resturns a list of employees that match the provided role',
+  @ApiOkResponse({
+    description: 'List of employees by role returned succesfully',
   })
-  async findByRole(@Param('role') role: string) {
+  @ApiNotFoundResponse({ description: 'Employee not found' })
+  findByRole(@Param('role') role: string) {
     return this.employeeService.findByRole(role);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update an employee' })
-  @ApiResponse({ status: 200, description: 'update the selected employee' })
-  async update(@Param('id') id: string, @Body() dto: UpdateEmployeeDto) {
+  @ApiOkResponse({ description: 'Employee updated succesfully' })
+  @ApiNotFoundResponse({ description: 'Employee not found' })
+  update(@Param('id') id: string, @Body() dto: UpdateEmployeeDto) {
     return this.employeeService.update(id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Deactivate employee' })
-  @ApiResponse({ status: 200, description: 'Deactivate the selected employee' })
-  async remove(@Param('id') id: string) {
+  @ApiOkResponse({ description: 'Employee marked as inactive successfully' })
+  @ApiNotFoundResponse({ description: 'Employee not found' })
+  remove(@Param('id') id: string) {
     return this.employeeService.remove(id);
   }
 }

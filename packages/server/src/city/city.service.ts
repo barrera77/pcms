@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { City, CityDocument } from 'src/city/city.entity';
 import { CreateCityDto } from 'src/city/dto/create-city.dto';
+import { UpdateCityDto } from 'src/city/dto/update-city.dto';
 import { ProvinceService } from 'src/province/province.service';
 
 @Injectable()
@@ -37,6 +38,17 @@ export class CityService {
       throw new NotFoundException('City not found');
     }
     return city;
+  }
+
+  async update(id: string, dto: UpdateCityDto): Promise<City> {
+    const updated = await this.cityModel.findByIdAndUpdate(id, dto, {
+      new: true,
+    });
+
+    if (!updated) {
+      throw new NotFoundException('City not found');
+    }
+    return updated;
   }
 
   async remove(id: string): Promise<City> {

@@ -7,3 +7,7 @@ export * from "./employee";
 export * from "./equipment";
 export * from "./product";
 export * from "./building";
+export * from "./department";
+export * from "./inventory";
+export * from "./pest";
+export * from "./report";

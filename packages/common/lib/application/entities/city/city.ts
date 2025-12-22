@@ -1,7 +1,7 @@
-import { IBaseEntity } from '../base-entity';
+import { IBaseEntity } from "lib/pcms-core";
 
 export interface ICity<T = string> extends IBaseEntity {
-  _id?: T;
+  _id: T;
   name: string;
   provinceId: T;
 }

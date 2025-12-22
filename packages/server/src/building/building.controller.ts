@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -30,9 +31,9 @@ export class BuildingController {
 
   @Post()
   @ApiOperation({ summary: 'Add a building' })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Building added succesfully',
+  @ApiCreatedResponse({
+    description: 'Building created successfully',
+    type: BuildingDto,
   })
   async create(@Body() dto: CreateBuildingDto) {
     return this.buildingService.create(dto);
@@ -89,7 +90,8 @@ export class BuildingController {
 
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate building' })
-  @ApiResponse({ status: 200, description: 'Building marked as inactive' })
+  @ApiOkResponse({ description: 'Building marked as inactive succesfully' })
+  @ApiNotFoundResponse({ description: 'Building not found' })
   async remove(@Param('id') id: string) {
     return this.buildingService.remove(id);
   }
