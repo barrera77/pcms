@@ -13,8 +13,7 @@ export class PestService {
   ) {}
 
   async create(dto: CreatePestDto): Promise<Pest> {
-    const newPest = new this.pestModel(dto);
-    return newPest.save();
+    return this.pestModel.create(dto);
   }
 
   async findAll(): Promise<Pest[]> {
@@ -41,12 +40,15 @@ export class PestService {
   }
 
   async remove(id: string): Promise<Pest> {
-    const pest = await this.pestModel.findById(id);
+    const pest = await this.pestModel.findOneAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
     if (!pest) {
       throw new NotFoundException();
     }
-    pest.isInactive = true;
-    pest.inactiveAt = new Date();
-    return pest.save();
+
+    return pest;
   }
 }

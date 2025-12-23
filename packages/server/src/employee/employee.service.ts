@@ -21,16 +21,12 @@ export class EmployeeService {
       throw new NotFoundException('Department not found');
     }
 
-    const createdEmployee = new this.employeeModel({
-      name: dto.name,
-      department: dto.departmentId,
-      phone: dto.phone,
-      email: dto.email,
-      role: dto.role,
+    return this.employeeModel.create({
+      ...dto,
+      departmentId: dto.departmentId,
     });
-
-    return createdEmployee.save();
   }
+
   async findAll(): Promise<Employee[]> {
     return this.employeeModel.find().populate('department').exec();
   }
@@ -55,12 +51,15 @@ export class EmployeeService {
   }
 
   async remove(id: string): Promise<Employee> {
-    const employee = await this.employeeModel.findById(id);
+    const employee = await this.employeeModel.findByIdAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
     if (!employee) {
-      throw new NotFoundException('Employee not found');
+      throw new NotFoundException('Employee not found or already inactive');
     }
-    employee.isInactive = true;
-    employee.inactiveAt = new Date();
-    return employee.save();
+
+    return employee;
   }
 }

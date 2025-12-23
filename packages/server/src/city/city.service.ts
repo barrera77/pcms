@@ -20,12 +20,10 @@ export class CityService {
       throw new NotFoundException('Province not found');
     }
 
-    const createdCity = new this.cityModel({
-      name: dto.name,
+    return this.cityModel.create({
+      ...dto,
       province: dto.provinceId,
     });
-
-    return createdCity.save();
   }
 
   async findAll(): Promise<City[]> {
@@ -52,12 +50,16 @@ export class CityService {
   }
 
   async remove(id: string): Promise<City> {
-    const city = await this.cityModel.findById(id);
+    const city = await this.cityModel.findByIdAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
+
     if (!city) {
-      throw new NotFoundException('City not found');
+      throw new NotFoundException('City not found or already inactive');
     }
-    city.isInactive = true;
-    city.inactiveAt = new Date();
-    return city.save();
+
+    return city;
   }
 }

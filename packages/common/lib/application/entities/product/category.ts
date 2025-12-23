@@ -1,4 +1,4 @@
-export const productCategories = {
+export const ProductCategories = {
   INSECTICIDES: "INSECTICIDES",
   RODENTICIDES: "RODENTICIDES",
   BAITS_AND_BAIT_STATIONS: "BAITS_AND_BAIT_STATIONS",
@@ -17,4 +17,4 @@ export const productCategories = {
 } as const;
 
 export type ProductCategory =
-  (typeof productCategories)[keyof typeof productCategories];
+  (typeof ProductCategories)[keyof typeof ProductCategories];

@@ -15,20 +15,16 @@ export class AreaService {
   ) {}
 
   async create(dto: CreateAreaDto): Promise<Area> {
-    const city = await this.cityService.findById(dto.cityId);
-
-    if (!city) {
-      throw new NotFoundException('City nor found');
+    if (!(await this.cityService.findById(dto.cityId))) {
+      throw new NotFoundException('City not found');
     }
 
-    const createArea = new this.areaModel({
+    return this.areaModel.create({
       name: dto.name,
-      city: dto.cityId,
-      manager: dto.managerId,
-      technicians: dto.techIds,
+      cityId: dto.cityId,
+      managerId: dto.managerId ?? null,
+      techIds: dto.techIds ?? [],
     });
-
-    return createArea.save();
   }
 
   async findAll(): Promise<Area[]> {
@@ -55,12 +51,16 @@ export class AreaService {
   }
 
   async remove(id: string): Promise<Area> {
-    const area = await this.areaModel.findById(id);
+    const area = await this.areaModel.findByIdAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
+
     if (!area) {
-      throw new NotFoundException('Area not found');
+      throw new NotFoundException('Area not found or already inactive');
     }
-    area.isInactive = true;
-    area.inactiveAt = new Date();
-    return area.save();
+
+    return area;
   }
 }

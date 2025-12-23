@@ -13,8 +13,7 @@ export class ProvinceService {
   ) {}
 
   async create(dto: CreateProvinceDto): Promise<Province> {
-    const newProvince = new this.provinceModel(dto);
-    return newProvince.save();
+    return this.provinceModel.create(dto);
   }
 
   async findAll(): Promise<Province[]> {
@@ -41,12 +40,16 @@ export class ProvinceService {
   }
 
   async remove(id: string): Promise<Province> {
-    const province = await this.provinceModel.findById(id);
+    const province = await this.provinceModel.findByIdAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
+
     if (!province) {
-      throw new NotFoundException('Province not found');
+      throw new NotFoundException('Province not found or already inactive');
     }
-    province.isInactive = true;
-    province.inactiveAt = new Date();
-    return province.save();
+
+    return province;
   }
 }

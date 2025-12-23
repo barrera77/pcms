@@ -21,13 +21,10 @@ export class BuildingService {
       throw new NotFoundException('Area not found');
     }
 
-    const createBuilding = new this.buildingModel({
-      name: dto.name,
-      area: dto.areaId,
-      numOfUnits: dto.numOfUnits,
-      units: dto.units,
+    return this.buildingModel.create({
+      ...dto,
+      areaId: dto.areaId,
     });
-    return createBuilding.save();
   }
 
   async findAll(): Promise<Building[]> {
@@ -54,13 +51,16 @@ export class BuildingService {
   }
 
   async remove(id: string): Promise<Building> {
-    const building = await this.buildingModel.findById(id);
+    const building = await this.buildingModel.findByIdAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
 
     if (!building) {
-      throw new NotFoundException('Building nort found');
+      throw new NotFoundException('Building nort found or already inactive');
     }
-    building.isInactive = true;
-    building.inactiveAt = new Date();
-    return building.save();
+
+    return building;
   }
 }

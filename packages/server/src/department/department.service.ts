@@ -17,8 +17,7 @@ export class DepartmentService {
   ) {}
 
   async create(dto: CreateDepartmentDto): Promise<Department> {
-    const newDepartment = new this.departmentModel(dto);
-    return newDepartment.save();
+    return this.departmentModel.create(dto);
   }
 
   async findAll(): Promise<Department[]> {
@@ -39,18 +38,22 @@ export class DepartmentService {
     });
 
     if (!updated) {
-      throw new NotFoundException('Department not found');
+      throw new NotFoundException('Department not found or already inactive');
     }
     return updated;
   }
 
   async remove(id: string): Promise<Department> {
-    const department = await this.departmentModel.findById(id);
+    const department = await this.departmentModel.findOneAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
+
     if (!department) {
-      throw new NotFoundException('Department not found');
+      throw new NotFoundException('Department not found or already innactive');
     }
-    department.isInactive = true;
-    department.inactiveAt = new Date();
-    return department.save();
+
+    return department;
   }
 }

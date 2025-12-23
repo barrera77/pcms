@@ -13,8 +13,7 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const newUser = new this.userModel(dto);
-    return newUser.save();
+    return this.userModel.create(dto);
   }
 
   async findAll(): Promise<User[]> {
@@ -41,12 +40,16 @@ export class UserService {
   }
 
   async remove(id: string): Promise<User> {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findByIdAndUpdate(
+      { _id: id, isInactive: false },
+      { isInactive: true, inactiveAt: new Date() },
+      { new: true },
+    );
+
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('User not found or already inactive');
     }
-    user.isInactive = true;
-    user.inactiveAt = new Date();
-    return user.save();
+
+    return user;
   }
 }
