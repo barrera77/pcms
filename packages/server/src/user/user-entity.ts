@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import type { UserRole } from '@pcms/pcms-common';
 import { UserRoles } from '@pcms/pcms-common';
+import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -17,7 +18,7 @@ export class User extends BaseEntity {
     type: String,
     enum: Object.values(UserRoles),
     required: true,
-    defaul: UserRoles.VIEWER,
+    default: UserRoles.VIEWER,
   })
   role: UserRole;
 }

@@ -13,8 +13,10 @@ import {
   ApiResponse,
   ApiOkResponse,
   ApiNotFoundResponse,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
 import { AreaService } from 'src/area/area.service';
+import { AreaDto } from 'src/area/dto/area-output.dto';
 import { CreateAreaDto } from 'src/area/dto/create-area.dto';
 import { UpdateAreaDto } from 'src/area/dto/update-area.dto';
 
@@ -25,11 +27,10 @@ export class AreaController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new area' })
-  @ApiResponse({
-    status: 201,
-    description: 'The area was successfully created',
+  @ApiCreatedResponse({
+    description: 'Area successfully created',
+    type: AreaDto,
   })
-  @ApiResponse({ status: 400, description: 'Invalid input data' })
   create(@Body() dto: CreateAreaDto) {
     return this.areaService.create(dto);
   }

@@ -1,0 +1,52 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreatePestDto } from 'src/pest/dto/create-pest.dto';
+import { UpdatePestDto } from 'src/pest/dto/update-pest.dto';
+import { Pest, PestDocument } from 'src/pest/pest.entity';
+
+@Injectable()
+export class PestService {
+  constructor(
+    @InjectModel(Pest.name)
+    private pestModel: Model<PestDocument>,
+  ) {}
+
+  async create(dto: CreatePestDto): Promise<Pest> {
+    const newPest = new this.pestModel(dto);
+    return newPest.save();
+  }
+
+  async findAll(): Promise<Pest[]> {
+    return this.pestModel.find().exec();
+  }
+
+  async findByName(name: string): Promise<Pest | null> {
+    return this.pestModel.findOne({ name }).exec();
+  }
+
+  async findByCatgory(category: string): Promise<Pest[]> {
+    return this.pestModel.find({ category }).exec();
+  }
+
+  async update(id: string, dto: UpdatePestDto): Promise<Pest> {
+    const updated = await this.pestModel.findByIdAndUpdate(id, dto, {
+      new: true,
+    });
+
+    if (!updated) {
+      throw new NotFoundException('Pest not found');
+    }
+    return updated;
+  }
+
+  async remove(id: string): Promise<Pest> {
+    const pest = await this.pestModel.findById(id);
+    if (!pest) {
+      throw new NotFoundException();
+    }
+    pest.isInactive = true;
+    pest.inactiveAt = new Date();
+    return pest.save();
+  }
+}

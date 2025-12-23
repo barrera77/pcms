@@ -39,8 +39,8 @@ export class EmployeeService {
     return this.employeeModel.findOne({ name }).populate('department').exec();
   }
 
-  async findByRole(role: string): Promise<Employee | null> {
-    return this.employeeModel.findOne({ role }).populate('department').exec();
+  async findByRole(role: string): Promise<Employee[]> {
+    return this.employeeModel.find({ role }).populate('department').exec();
   }
 
   async update(id: string, dto: UpdateEmployeeDto): Promise<Employee> {
