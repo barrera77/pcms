@@ -8,4 +8,5 @@ export interface IProduct<T = string> extends IBaseEntity {
   activeIngredient: string;
   labelUrl: string;
   msdsUrl: string;
+  supplier: T;
 }

@@ -1,0 +1,1 @@
+export { ISupplier } from "./supplier";

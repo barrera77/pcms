@@ -6,4 +6,5 @@ export interface IEquipment<T = string> extends IBaseEntity {
   description: string;
   sku: string;
   serialNumber?: string | undefined;
+  supplier: T;
 }

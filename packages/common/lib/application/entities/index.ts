@@ -11,3 +11,4 @@ export * from "./department";
 export * from "./inventory";
 export * from "./pest";
 export * from "./report";
+export * from "./supplier";

@@ -30,7 +30,7 @@ export class CityService {
     return this.cityModel.find().populate('province').exec();
   }
 
-  async findById(id: string): Promise<City> {
+  async findById(id: string): Promise<City | null> {
     const city = await this.cityModel.findById(id).exec();
     if (!city) {
       throw new NotFoundException('City not found');

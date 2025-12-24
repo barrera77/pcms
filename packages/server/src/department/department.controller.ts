@@ -64,7 +64,9 @@ export class DepartmentController {
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate department' })
   @ApiOkResponse({ description: 'Department marked as inactive succesfully' })
-  @ApiNotFoundResponse({ description: 'Department not found' })
+  @ApiNotFoundResponse({
+    description: 'Department not found or marked as inactive',
+  })
   remove(@Param('id') id: string) {
     return this.departmentService.remove(id);
   }

@@ -31,6 +31,16 @@ export class EquipmentService {
     return this.equipmentModel.find().exec();
   }
 
+  async findById(id: string): Promise<Equipment | null> {
+    const equipment = await this.equipmentModel.findById(id).exec();
+
+    if (!equipment) {
+      throw new NotFoundException('Equipment item not found');
+    }
+
+    return equipment;
+  }
+
   async findByName(name: string): Promise<Equipment | null> {
     return this.equipmentModel.findOne({ name }).exec();
   }

@@ -46,6 +46,16 @@ export class EquipmentController {
     return this.equipmentService.findAll();
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get an equipment by ID' })
+  @ApiOkResponse({
+    description: 'Equipment retrieved successfully',
+  })
+  @ApiNotFoundResponse({ description: 'Equipment not found' })
+  findOne(@Param('id') id: string) {
+    return this.equipmentService.findById(id);
+  }
+
   @Get(':name')
   @ApiOperation({ summary: 'List of equipment items by name' })
   @ApiOkResponse({
