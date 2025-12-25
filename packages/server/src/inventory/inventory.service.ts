@@ -48,10 +48,27 @@ export class InventoryService {
     return this.inventoryModel.create(dto);
   }
 
-  async findAll(): Promise<Inventory[]> {
-    return this.inventoryModel.find().exec();
+  //TODO: need to make sure this is the correct approach
+  async findAll(): Promise<any[]> {
+    const inventory = await this.inventoryModel.find().lean().exec();
+
+    return Promise.all(
+      inventory.map(async (item) => {
+        let refDoc;
+        if (item.itemType === 'product') {
+          refDoc = await this.inventoryModel
+            .findById(item.itemId)
+            .lean()
+            .exec();
+        } else if (item.itemId === 'equipment') {
+          refDoc = await this.inventoryModel.find().lean().exec();
+        }
+        return { ...item, itemDetails: refDoc };
+      }),
+    );
   }
 
+  //TODO: I feel this is also wrong, need a more complex query since I only have ids in the entity
   async findByName(name: string): Promise<Inventory | null> {
     return this.inventoryModel.findOne({ name }).exec();
   }

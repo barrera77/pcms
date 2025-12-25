@@ -6,7 +6,7 @@ import { PestCategories } from '@pcms/pcms-common';
 
 export type PestDocument = Pest & Document;
 
-@Schema()
+@Schema({ collection: 'pest' })
 export class Pest extends BaseEntity {
   @Prop({ required: true })
   name: string;

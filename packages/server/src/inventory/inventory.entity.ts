@@ -3,7 +3,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 
 export type InventoryDocument = Inventory & DocumentTimeline;
 
-@Schema()
+@Schema({ collection: 'inventory' })
 export class Inventory extends BaseEntity {
   @Prop({ required: true })
   itemId: string;

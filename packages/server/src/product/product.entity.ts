@@ -6,7 +6,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 
 export type ProductDocument = Product & Document;
 
-@Schema()
+@Schema({ collection: 'product' })
 export class Product extends BaseEntity {
   @Prop({ type: String, required: true, unique: true })
   name: string;

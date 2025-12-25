@@ -20,7 +20,7 @@ import { CityDto } from 'src/city/dto/city-output.dto';
 import { UpdateCityDto } from 'src/city/dto/update-city.dto';
 
 @ApiTags('Cities')
-@Controller('cities')
+@Controller('city')
 export class CityController {
   constructor(private readonly cityService: CityService) {}
 

@@ -16,4 +16,7 @@ export class EquipmentDto implements IEquipment {
 
   @ApiProperty()
   serialNumber?: string | undefined;
+
+  @ApiProperty()
+  supplier: string;
 }

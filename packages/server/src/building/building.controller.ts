@@ -25,7 +25,7 @@ import { BuildingDto } from 'src/building/dto/building-output.dto';
 import { Building } from 'src/building/building.entity';
 
 @ApiTags('Buildings')
-@Controller('buildings')
+@Controller('building')
 export class BuildingController {
   constructor(private readonly buildingService: BuildingService) {}
 

@@ -21,7 +21,7 @@ import { CreateAreaDto } from 'src/area/dto/create-area.dto';
 import { UpdateAreaDto } from 'src/area/dto/update-area.dto';
 
 @ApiTags('Area')
-@Controller('areas')
+@Controller('area')
 export class AreaController {
   constructor(private readonly areaService: AreaService) {}
 

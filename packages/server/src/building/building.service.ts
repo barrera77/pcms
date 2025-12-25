@@ -28,7 +28,10 @@ export class BuildingService {
   }
 
   async findAll(): Promise<Building[]> {
-    return this.buildingModel.find().populate('building').exec();
+    return this.buildingModel
+      .find()
+      .populate({ path: 'areaId', select: 'name' })
+      .exec();
   }
 
   async findByName(name: string): Promise<Building | null> {

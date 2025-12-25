@@ -21,7 +21,7 @@ import { UpdatePestDto } from 'src/pest/dto/update-pest.dto';
 import { PestService } from 'src/pest/pest.service';
 
 @ApiTags('Pest')
-@Controller('pests')
+@Controller('pest')
 export class PestController {
   constructor(private readonly pestService: PestService) {}
 

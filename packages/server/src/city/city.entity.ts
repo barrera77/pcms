@@ -5,7 +5,7 @@ import { Province } from 'src/province/province.entity';
 
 export type CityDocument = City & Document;
 
-@Schema()
+@Schema({ collection: 'city' })
 export class City extends BaseEntity {
   @Prop({ required: true })
   name: string;

@@ -3,7 +3,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 
 export type SupplierDocument = Supplier & Document;
 
-@Schema()
+@Schema({ collection: 'supplier' })
 export class Supplier extends BaseEntity {
   @Prop({ type: String, required: true })
   name: string;

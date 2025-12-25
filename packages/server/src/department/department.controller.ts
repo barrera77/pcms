@@ -21,7 +21,7 @@ import { DepartmentDto } from 'src/department/dto/department-output.dto';
 import { UpdateDepartmentDto } from 'src/department/dto/update-department.dto';
 
 @ApiTags('Departments')
-@Controller('departments')
+@Controller('department')
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 

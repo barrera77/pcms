@@ -20,8 +20,8 @@ import { ProvinceDto } from 'src/province/dto/province-output.dto';
 import { UpdateProvinceDto } from 'src/province/dto/update-province.dto';
 import { ProvinceService } from 'src/province/province.service';
 
-@ApiTags('Province')
-@Controller('provinces')
+@ApiTags('Provinces')
+@Controller('province')
 export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}
 

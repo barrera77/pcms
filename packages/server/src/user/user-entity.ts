@@ -6,7 +6,7 @@ import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({ collection: 'user' })
 export class User extends BaseEntity {
   @Prop({ type: String, required: true, unique: true })
   userName: string;

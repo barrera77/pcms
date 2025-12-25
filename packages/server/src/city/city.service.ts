@@ -27,7 +27,10 @@ export class CityService {
   }
 
   async findAll(): Promise<City[]> {
-    return this.cityModel.find().populate('province').exec();
+    return this.cityModel
+      .find()
+      .populate({ path: 'province', select: 'name' })
+      .exec();
   }
 
   async findById(id: string): Promise<City | null> {

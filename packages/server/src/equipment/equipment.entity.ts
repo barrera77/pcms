@@ -4,7 +4,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 
 export type EquipmentDocument = Equipment & Document;
 
-@Schema()
+@Schema({ collection: 'equipment' })
 export class Equipment extends BaseEntity {
   @Prop({ required: true })
   name: string;

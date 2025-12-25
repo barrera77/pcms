@@ -4,7 +4,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 
 export type AreaDocument = Area & Document;
 
-@Schema()
+@Schema({ collection: 'area' })
 export class Area extends BaseEntity {
   @Prop({ required: true })
   name: string;
@@ -15,7 +15,7 @@ export class Area extends BaseEntity {
   @Prop({
     type: Types.ObjectId,
     ref: 'Employee',
-    requirerd: false,
+    required: false,
     default: null,
   })
   managerId: Types.ObjectId | null;

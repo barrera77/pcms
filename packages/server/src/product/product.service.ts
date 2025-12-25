@@ -27,6 +27,8 @@ export class ProductService {
     });
   }
 
+  //TODO: this will return only the id of the supplier rather than the name, need to make a proper query follow the inventory example
+
   async findAll(): Promise<Product[]> {
     return this.productModel.find().populate('supplier').exec();
   }
@@ -42,6 +44,7 @@ export class ProductService {
     return product;
   }
 
+  //TODO: the same case as findAll()
   async findByName(name: string): Promise<Product | null> {
     return this.productModel.findOne({ name }).populate('supplier').exec();
   }

@@ -28,11 +28,17 @@ export class EmployeeService {
   }
 
   async findAll(): Promise<Employee[]> {
-    return this.employeeModel.find().populate('department').exec();
+    return this.employeeModel
+      .find()
+      .populate({ path: 'departmentId', select: 'name' })
+      .exec();
   }
 
   async findByName(name: string): Promise<Employee | null> {
-    return this.employeeModel.findOne({ name }).populate('department').exec();
+    return this.employeeModel
+      .findOne({ name })
+      .populate({ path: 'departmentId', select: 'name' })
+      .exec();
   }
 
   async findByRole(role: string): Promise<Employee[]> {

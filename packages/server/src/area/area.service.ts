@@ -28,7 +28,10 @@ export class AreaService {
   }
 
   async findAll(): Promise<Area[]> {
-    return this.areaModel.find().populate('area').exec();
+    return this.areaModel
+      .find()
+      .populate({ path: 'cityId', select: 'name' })
+      .exec();
   }
 
   async findById(id: string): Promise<Area> {

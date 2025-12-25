@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { DepartmentModule } from 'src/department/department.module';
 import { EmployeeController } from 'src/employee/employee.controller';
 import { Employee, EmployeeSchema } from 'src/employee/employee.entity';
 import { EmployeeService } from 'src/employee/employee.service';
@@ -9,6 +10,7 @@ import { EmployeeService } from 'src/employee/employee.service';
     MongooseModule.forFeature([
       { name: Employee.name, schema: EmployeeSchema },
     ]),
+    DepartmentModule,
   ],
   controllers: [EmployeeController],
   providers: [EmployeeService],
