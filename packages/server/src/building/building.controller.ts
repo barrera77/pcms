@@ -14,13 +14,11 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { BuildingService } from 'src/building/building.service';
 import { CreateBuildingDto } from 'src/building/dto/create-building.dto';
 import { UpdateBuildingDto } from 'src/building/dto/update-building.dto';
-import { HttpStatus } from '@nestjs/common';
 import { BuildingDto } from 'src/building/dto/building-output.dto';
 import { Building } from 'src/building/building.entity';
 

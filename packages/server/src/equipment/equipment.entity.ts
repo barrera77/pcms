@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { BaseEntity } from 'src/common/entities/base.entity';
 
 export type EquipmentDocument = Equipment & Document;
 
 @Schema({ collection: 'equipment' })
 export class Equipment extends BaseEntity {
-  @Prop({ required: true })
+  @Prop({ type: String, required: true, unique: true })
   name: string;
 
   @Prop({ required: true })
@@ -18,6 +18,9 @@ export class Equipment extends BaseEntity {
 
   @Prop()
   serialNumber?: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'supplier', required: true })
+  supplier: Types.ObjectId;
 }
 
 export const EquipmentSchema = SchemaFactory.createForClass(Equipment);

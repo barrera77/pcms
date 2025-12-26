@@ -8,6 +8,13 @@ import { CityModule } from 'src/city/city.module';
 import { ProvinceModule } from 'src/province/province.module';
 import { EmployeeModule } from 'src/employee/employee.module';
 import { DepartmentModule } from 'src/department/department.module';
+import { EquipmentModule } from 'src/equipment/equipment.module';
+import { InventoryModule } from 'src/inventory/inventory.module';
+import { ProductModule } from 'src/product/product.module';
+import { PestModule } from 'src/pest/pest.module';
+import { BuildingModule } from 'src/building/building.module';
+import { UserModule } from 'src/user/user.module';
+import { SupplierModule } from 'src/supplier/supplier.module';
 
 @Module({
   imports: [
@@ -18,6 +25,13 @@ import { DepartmentModule } from 'src/department/department.module';
     AreaModule,
     EmployeeModule,
     DepartmentModule,
+    EquipmentModule,
+    InventoryModule,
+    ProductModule,
+    PestModule,
+    BuildingModule,
+    UserModule,
+    SupplierModule,
   ],
   controllers: [AppController],
   providers: [AppService],

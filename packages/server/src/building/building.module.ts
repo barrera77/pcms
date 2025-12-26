@@ -16,4 +16,4 @@ import { BuildingService } from 'src/building/building.service';
   providers: [BuildingService],
   exports: [BuildingService],
 })
-export class buildingModule {}
+export class BuildingModule {}

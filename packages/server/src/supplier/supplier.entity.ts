@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseEntity } from 'src/common/entities/base.entity';
 
 export type SupplierDocument = Supplier & Document;
@@ -20,3 +20,5 @@ export class Supplier extends BaseEntity {
   @Prop()
   address?: string;
 }
+
+export const SupplierSchema = SchemaFactory.createForClass(Supplier);

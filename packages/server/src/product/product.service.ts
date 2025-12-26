@@ -4,14 +4,14 @@ import { Model } from 'mongoose';
 import { CreateProductDto } from 'src/product/dto/create-product.dto';
 import { UpdateProductDto } from 'src/product/dto/update-product.dto';
 import { Product, ProductDocument } from 'src/product/product.entity';
-import { Supplier } from 'src/supplier/supplier.entity';
+import { SupplierService } from 'src/supplier/supplier.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name)
     private productModel: Model<ProductDocument>,
-    private supplierService: Model<Supplier>,
+    private supplierService: SupplierService,
   ) {}
 
   async create(dto: CreateProductDto): Promise<Product> {
@@ -23,7 +23,7 @@ export class ProductService {
 
     return this.productModel.create({
       ...dto,
-      supplier: supplier._id,
+      supplier: dto.supplier,
     });
   }
 

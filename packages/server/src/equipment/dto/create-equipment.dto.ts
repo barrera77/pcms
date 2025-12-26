@@ -15,4 +15,7 @@ export class CreateEquipmentDto {
 
   @ApiProperty({ description: 'SN' })
   serialNumber?: string;
+
+  @ApiProperty({ description: 'Supplier' })
+  supplier: string;
 }

@@ -4,16 +4,26 @@ import { Model } from 'mongoose';
 import { CreateEquipmentDto } from 'src/equipment/dto/create-equipment.dto';
 import { UpdateEquipmentDto } from 'src/equipment/dto/update-equipment.dto';
 import { Equipment, EquipmentDocument } from 'src/equipment/equipment.entity';
+import { SupplierService } from 'src/supplier/supplier.service';
 
 @Injectable()
 export class EquipmentService {
   constructor(
     @InjectModel(Equipment.name)
     private equipmentModel: Model<EquipmentDocument>,
+    private supplierService: SupplierService,
   ) {}
 
   async create(dto: CreateEquipmentDto): Promise<Equipment> {
-    return this.equipmentModel.create(dto);
+    const supplier = await this.supplierService.findById(dto.supplier);
+
+    if (!supplier) {
+      throw new NotFoundException('Supplier not found');
+    }
+    return this.equipmentModel.create({
+      ...dto,
+      supplier: dto.supplier,
+    });
   }
 
   async update(id: string, dto: UpdateEquipmentDto): Promise<Equipment> {
