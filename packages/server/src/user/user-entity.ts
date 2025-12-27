@@ -9,10 +9,10 @@ export type UserDocument = User & Document;
 @Schema({ collection: 'user' })
 export class User extends BaseEntity {
   @Prop({ type: String, required: true, unique: true })
-  userName: string;
+  userName: string; //Will be the corporate email
 
   @Prop({ type: String, required: true })
-  hashedPassword: string;
+  hashedPassword: string | null;
 
   @Prop({
     type: String,
@@ -21,6 +21,15 @@ export class User extends BaseEntity {
     default: UserRoles.VIEWER,
   })
   role: UserRole;
+
+  // Activation tracking
+  @Prop({ type: Boolean, default: false })
+  isActivated: boolean;
+
+  @Prop({ type: Date })
+  activatedAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.index({ activationToken: 1 });

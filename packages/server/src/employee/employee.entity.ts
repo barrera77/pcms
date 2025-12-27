@@ -11,7 +11,7 @@ export class Employee extends BaseEntity {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Department' })
+  @Prop({ type: Types.ObjectId, ref: 'department' })
   departmentId: string;
 
   @Prop({ required: true })
@@ -22,6 +22,9 @@ export class Employee extends BaseEntity {
 
   @Prop({ required: true, type: String, enum: Object.values(EmployeeRoles) })
   role: EmployeeRole;
+
+  @Prop({ type: Types.ObjectId, ref: 'user', default: null })
+  userId?: Types.ObjectId;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

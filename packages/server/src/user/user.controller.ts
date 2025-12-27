@@ -8,6 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -15,6 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { ActivateUserDto } from 'src/user/dto/activate-user.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { UserDto } from 'src/user/dto/user.output.dto';
@@ -28,11 +30,19 @@ export class UserController {
   @Post()
   @ApiOperation({ summary: 'Add a user' })
   @ApiCreatedResponse({
-    description: 'Building created successfully',
+    description: 'User created and activation email sent',
     type: UserDto,
   })
   create(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
+  }
+
+  @Post('activate')
+  @ApiOperation({ summary: 'Activate a user account' })
+  @ApiOkResponse({ description: 'Account activated successfully' })
+  @ApiBadRequestResponse({ description: 'Invalid or expired token' })
+  async activate(@Body() dto: ActivateUserDto) {
+    return this.userService.activateUser(dto);
   }
 
   @Get()

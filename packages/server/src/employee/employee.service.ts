@@ -41,6 +41,13 @@ export class EmployeeService {
       .exec();
   }
 
+  async findByEmail(email: string): Promise<EmployeeDocument | null> {
+    return this.employeeModel
+      .findOne({ email })
+      .populate({ path: 'departmentId', select: 'name' })
+      .exec();
+  }
+
   async findByRole(role: string): Promise<Employee[]> {
     return this.employeeModel.find({ role }).populate('department').exec();
   }

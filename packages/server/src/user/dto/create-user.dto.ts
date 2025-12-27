@@ -4,15 +4,10 @@ import { UserRoles } from '@pcms/pcms-common';
 import { IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class CreateUserDto {
-  @ApiProperty({ description: 'User Name' })
+  @ApiProperty({ description: 'User' })
   @IsString()
   @IsNotEmpty()
   userName: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(8)
-  hashedPassword: string;
 
   @ApiProperty({ enum: UserRoles, default: UserRoles.VIEWER })
   @IsEnum(UserRoles)

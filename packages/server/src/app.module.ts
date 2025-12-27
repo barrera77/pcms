@@ -15,6 +15,7 @@ import { PestModule } from 'src/pest/pest.module';
 import { BuildingModule } from 'src/building/building.module';
 import { UserModule } from 'src/user/user.module';
 import { SupplierModule } from 'src/supplier/supplier.module';
+import { MailerModule } from '@nestjs-modules/mailer/dist/mailer.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { SupplierModule } from 'src/supplier/supplier.module';
     BuildingModule,
     UserModule,
     SupplierModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
