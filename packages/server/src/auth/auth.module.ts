@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtAccessTokenStrategyStrategy } from './strategies/jwtAccessToken.strategy';
+import { JwtAccessTokenStrategy } from './strategies/jwtAccessToken.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtRefreshTokenStrategy } from './strategies/jwtRefreshToken.strategy';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -28,7 +28,7 @@ import { UserModule } from 'src/user/user.module';
   controllers: [AuthController],
   providers: [
     AuthService,
-    JwtAccessTokenStrategyStrategy,
+    JwtAccessTokenStrategy,
     JwtRefreshTokenStrategy,
     RolesGuard,
   ],

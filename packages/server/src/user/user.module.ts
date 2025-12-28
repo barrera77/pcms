@@ -20,6 +20,6 @@ import { MailerModule } from 'src/mailer/mailer.module';
   ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService],
+  exports: [UserService, MongooseModule],
 })
 export class UserModule {}

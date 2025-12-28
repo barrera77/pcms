@@ -18,8 +18,6 @@ import { LoginDto } from 'src/auth/dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('admin')
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,
@@ -29,19 +27,19 @@ export class AuthController {
 
     res.cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 1000 * 60 * 15,
     });
 
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 1,
     });
 
-    return { message: 'Login successfull' };
+    return { message: 'Login successful' };
   }
 
   @UseGuards(AuthGuard('jwt-refresh'))

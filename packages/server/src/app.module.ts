@@ -16,6 +16,7 @@ import { BuildingModule } from 'src/building/building.module';
 import { UserModule } from 'src/user/user.module';
 import { SupplierModule } from 'src/supplier/supplier.module';
 import { MailerModule } from '@nestjs-modules/mailer/dist/mailer.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MailerModule } from '@nestjs-modules/mailer/dist/mailer.module';
     UserModule,
     SupplierModule,
     MailerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

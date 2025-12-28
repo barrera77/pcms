@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class ActivateUserDto {
   @ApiProperty({
-    description: 'P4rovide you token',
+    description: 'Provide you token',
   })
   @IsString()
   token: string;
