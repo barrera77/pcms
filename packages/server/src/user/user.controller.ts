@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -18,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { ActivateUserDto } from 'src/user/dto/activate-user.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { ResendActivationDto } from 'src/user/dto/resend-user-activation.dto';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { UserDto } from 'src/user/dto/user.output.dto';
 import { UserService } from 'src/user/user.service';
@@ -43,6 +45,16 @@ export class UserController {
   @ApiBadRequestResponse({ description: 'Invalid or expired token' })
   async activate(@Body() dto: ActivateUserDto) {
     return this.userService.activateUser(dto);
+  }
+
+  @Post('resend-activation')
+  @ApiOperation({ summary: 'Resend activation email' })
+  @ApiOkResponse({ description: 'Activation email resent successfully' })
+  @ApiBadRequestResponse({
+    description: 'Invalid or already activated account',
+  })
+  async resendActivation(@Body() dto: ResendActivationDto) {
+    return this.userService.resendActivation(dto.email);
   }
 
   @Get()

@@ -38,7 +38,7 @@ export class DepartmentController {
   @Get()
   @ApiOperation({ summary: 'List all departments' })
   @ApiOkResponse({
-    description: 'List of buildings returned succesfully',
+    description: 'List of departments returned succesfully',
     type: [DepartmentDto],
   })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })

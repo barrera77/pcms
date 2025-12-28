@@ -11,7 +11,7 @@ export class User extends BaseEntity {
   @Prop({ type: String, required: true, unique: true })
   userName: string; //Will be the corporate email
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, deafult: null })
   hashedPassword: string | null;
 
   @Prop({

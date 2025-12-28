@@ -18,7 +18,7 @@ export class EmployeeService {
     const department = await this.departmentService.findById(dto.departmentId);
 
     if (!department) {
-      throw new NotFoundException('Department not found');
+      throw new NotFoundException('Department not found.');
     }
 
     return this.employeeModel.create({

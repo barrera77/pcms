@@ -6,7 +6,6 @@ import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { User, UserDocument } from 'src/user/user-entity';
 import { LoginDto } from 'src/auth/dto';
-import { UserRoles } from '@pcms/pcms-common';
 
 @Injectable()
 export class AuthService {
@@ -67,7 +66,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<number>('JWT_REFRESH_EXPIRY'),
+      expiresIn: this.configService.get<number>('JWT_EXPIRY'),
     });
 
     return { accessToken, refreshToken };

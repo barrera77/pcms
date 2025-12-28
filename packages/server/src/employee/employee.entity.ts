@@ -11,7 +11,7 @@ export class Employee extends BaseEntity {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'department' })
+  @Prop({ type: Types.ObjectId, ref: 'Department' })
   departmentId: string;
 
   @Prop({ required: true })

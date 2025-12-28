@@ -37,7 +37,10 @@ async function bootstrap() {
   //Protect against common web attacks
   app.use(helmet());
   app.use(cookieParser());
-  app.use(csurf({ cookie: { sameSite: 'lax' } }));
+  if (process.env.NODE_ENV === 'production') {
+    app.use(csurf());
+  }
+  //app.use(csurf({ cookie: { sameSite: 'lax' } }));
 
   //TODO: Need to create these cron jobs for emailing, schedule and other reminders
   /*   cronService.handleEmailCron();

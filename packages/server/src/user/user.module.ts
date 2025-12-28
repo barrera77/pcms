@@ -5,6 +5,8 @@ import { EmployeeModule } from 'src/employee/employee.module';
 import { User, UserSchema } from 'src/user/user-entity';
 import { UserController } from 'src/user/user.controller';
 import { UserService } from 'src/user/user.service';
+import { JwtModule } from '@nestjs/jwt';
+import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { UserService } from 'src/user/user.service';
       { name: Employee.name, schema: EmployeeSchema },
     ]),
     EmployeeModule,
+    JwtModule.register({}),
+    MailerModule,
   ],
   controllers: [UserController],
   providers: [UserService],

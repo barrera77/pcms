@@ -1,22 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  async sendActivationEmail(to: string, token: string) {
-    const activationLink = `${process.env.FRONTEND_URL}/activate?token=${token}`;
-
+  async sendActivationEmail(email: string, token: string) {
+    // For now, just include the token in the email
+    // User will manually POST to /user/activate with this token
     await this.mailerService.sendMail({
-      to,
+      to: email,
       subject: 'Activate your PCMS account',
       html: `
-        <p>Hello,</p>
-        <p>Click the link below to activate your account:</p>
-        <a href="${activationLink}">Activate your account</a>
-        <p>This link will expire in 24 hours.</p>
+        <h2>Account Activation</h2>
+        <p>Your account has been created. To activate it, use this token:</p>
+        <p><strong>${token}</strong></p>
+        <p>Send a POST request to <code>POST /user/activate</code> with:</p>
+        <pre>
+{
+  "token": "${token}",
+  "password": "your-password"
+}
+        </pre>
+        <p>This token expires in 48 hours.</p>
       `,
     });
+
+    console.log('Activation email sent to:', email);
   }
 }

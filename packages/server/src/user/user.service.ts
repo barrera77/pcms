@@ -15,22 +15,40 @@ import { Employee, EmployeeDocument } from 'src/employee/employee.entity';
 import { ActivateUserDto } from 'src/user/dto/activate-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from 'src/mailer/mailer.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name)
-    private userModel: Model<UserDocument>,
     private jwtService: JwtService,
     private mailService: MailService,
+    private configService: ConfigService,
+    @InjectModel(User.name)
+    private userModel: Model<UserDocument>,
     @InjectModel(Employee.name)
     private employeeModel: Model<EmployeeDocument>,
     private employeeService: EmployeeService,
   ) {}
 
+  private generateActivationToken(userId: string, email: string): string {
+    const expiresIn = this.configService.get('JWT_ACTIVATION_EXPIRY') || '48h';
+    const secret = this.configService.get('JWT_ACTIVATION_SECRET');
+
+    return this.jwtService.sign(
+      {
+        sub: userId,
+        email: email,
+        purpose: 'account-activation',
+      },
+      {
+        expiresIn,
+        secret,
+      },
+    );
+  }
+
   async create(dto: CreateUserDto): Promise<{
     user: User;
-    activationToken: string;
   }> {
     const employee = await this.employeeService.findByEmail(dto.userName);
 
@@ -56,7 +74,7 @@ export class UserService {
 
     //Validate corporate email domain
     const allowedDomains = process.env.ALLOWED_EMAIL_DOMAIN?.split(',') || [
-      '@company.com',
+      '@hotmail.com',
     ];
 
     const emailDomain = dto.userName.substring(dto.userName.indexOf('@'));
@@ -68,10 +86,9 @@ export class UserService {
     }
 
     //Generate activation token (48 hours validity)
-    //TODO: need to find a proper validity
-    const activationToken = this.jwtService.sign(
-      { sub: employee._id, email: employee.email },
-      { expiresIn: '24h' },
+    const activationToken = this.generateActivationToken(
+      employee._id.toString(),
+      employee.email,
     );
 
     //Create user
@@ -88,17 +105,23 @@ export class UserService {
 
     await this.mailService.sendActivationEmail(employee.email, activationToken);
 
-    return { user, activationToken };
+    return { user };
   }
 
   async activateUser(dto: ActivateUserDto) {
+    const secret = this.configService.get('JWT_ACTIVATION_SECRET');
+
     let payload;
     try {
       payload = this.jwtService.verify(dto.token, {
-        secret: process.env.JWT_SECRET,
+        secret: secret,
       });
     } catch (err) {
       throw new BadRequestException('Invalid or expired token');
+    }
+
+    if (payload.purpose !== 'account-activation') {
+      throw new BadRequestException('Invalid token purpose');
     }
 
     const user = await this.userModel.findOne({ userName: payload.email });
@@ -113,6 +136,30 @@ export class UserService {
     await user.save();
 
     return { message: 'Account activated successfully' };
+  }
+
+  async resendActivation(email: string) {
+    const user = await this.userModel.findOne({ userName: email });
+
+    if (!user || user.isActivated) {
+      throw new BadRequestException('Invalid or already activated account');
+    }
+
+    const activationToken = this.generateActivationToken(
+      user._id.toString(),
+      email,
+    );
+
+    //Resend the email
+    await this.mailService.sendActivationEmail(email, activationToken);
+    return { message: 'Activation email resent' };
+  }
+
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.userModel
+      .findOne({ email })
+      .populate({ path: 'departmentId', select: 'name' })
+      .exec();
   }
 
   async findAll(): Promise<User[]> {
