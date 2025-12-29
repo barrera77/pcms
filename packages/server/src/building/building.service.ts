@@ -34,12 +34,26 @@ export class BuildingService {
       .exec();
   }
 
-  async findByName(name: string): Promise<Building | null> {
-    return this.buildingModel.findOne({ name }).populate('building').exec();
+  async findByName(name: string): Promise<BuildingDocument | null> {
+    return this.buildingModel
+      .findOne({ name })
+      .populate({ path: 'areaId', select: 'name' })
+      .exec();
   }
 
-  async findByArea(area: string): Promise<Building | null> {
-    return this.buildingModel.findOne({ area }).populate('department').exec();
+  async findByArea(area: string): Promise<BuildingDocument | null> {
+    return this.buildingModel
+      .findOne({ area })
+      .populate({ path: 'areaId', select: 'name' })
+      .exec();
+  }
+
+  async findById(id: string): Promise<Building | null> {
+    const building = await this.buildingModel.findById(id).exec();
+    if (!building) {
+      throw new NotFoundException('Building not found');
+    }
+    return building;
   }
 
   async update(id: string, dto: UpdateBuildingDto): Promise<Building> {

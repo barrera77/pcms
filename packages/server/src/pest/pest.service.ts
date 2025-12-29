@@ -28,6 +28,19 @@ export class PestService {
     return this.pestModel.find({ category }).exec();
   }
 
+  async findById(id: string): Promise<Pest | null> {
+    const pest = await this.pestModel.findById(id).exec();
+
+    if (!pest) {
+      throw new NotFoundException('Pest not found');
+    }
+    return pest;
+  }
+
+  async findByIds(ids: string[]): Promise<Pest[]> {
+    return this.pestModel.find({ _id: { $in: ids } }).exec();
+  }
+
   async update(id: string, dto: UpdatePestDto): Promise<Pest> {
     const updated = await this.pestModel.findByIdAndUpdate(id, dto, {
       new: true,
