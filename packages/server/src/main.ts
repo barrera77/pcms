@@ -40,11 +40,18 @@ async function bootstrap() {
   });
 
   //Protect against common web attacks
-  app.use(helmet());
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      crossOriginOpenerPolicy: { policy: 'unsafe-none' },
+    }),
+  );
   app.use(cookieParser());
-  if (process.env.NODE_ENV === 'production') {
-    app.use(csurf());
-  }
+
+  app.enableCors({
+    origin: 'http://localhost:5173', // your Vite frontend
+    credentials: true,
+  });
   //app.use(csurf({ cookie: { sameSite: 'lax' } }));
 
   //TODO: Need to create these cron jobs for emailing, schedule and other reminders

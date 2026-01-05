@@ -11,6 +11,7 @@ import {
   CircularProgress,
   InputAdornment,
   Paper,
+  Alert,
 } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -18,6 +19,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "@/redux/auth/api/authApi";
 
 type LoginFormData = {
   userName: string;
@@ -25,37 +27,31 @@ type LoginFormData = {
   rememberMe?: boolean;
 };
 
-type LoginProps = {
-  onToggle?: () => void;
-};
-
-//TODO:Need to find out if my current auth setup allows rmember me or can be added
-
-export const Login = ({ onToggle }: LoginProps) => {
+export const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
 
+  const [login, { isLoading, isError, error }] = useLoginMutation();
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true);
     try {
-      // simulate login request
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await login({
+        userName: data.userName,
+        password: data.password,
+      }).unwrap();
+
       setShowSuccess(true);
 
       setTimeout(() => {
         navigate("/", { replace: true });
       }, 1000);
-    } catch {
-      console.error("Login failed");
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      console.error("Login failed:", err);
     }
   };
 
@@ -124,6 +120,14 @@ export const Login = ({ onToggle }: LoginProps) => {
               animate={{ opacity: 1, y: 0 }}
               style={{ display: "flex", flexDirection: "column", gap: 16 }}
             >
+              {/* Error Alert */}
+              {isError && (
+                <Alert severity="error">
+                  {(error as any)?.data?.message ||
+                    "Login failed. Please check your credentials."}
+                </Alert>
+              )}
+
               {/* Email Field */}
               <TextField
                 label="Email Address"
@@ -209,12 +213,6 @@ export const Login = ({ onToggle }: LoginProps) => {
                 </AnimatePresence>
               </Button>
 
-              {onToggle && (
-                <Button variant="text" size="small" onClick={onToggle}>
-                  Don’t have an account? Register
-                </Button>
-              )}
-
               <Box position="relative" my={2}>
                 <Divider />
                 <Typography
@@ -229,7 +227,7 @@ export const Login = ({ onToggle }: LoginProps) => {
                     color: "text.secondary",
                   }}
                 >
-                  Or
+                  New User?
                 </Typography>
               </Box>
 
@@ -238,34 +236,8 @@ export const Login = ({ onToggle }: LoginProps) => {
                 color="text.secondary"
                 textAlign="center"
               >
-                Contact your admin to provide you a registration link
-              </Typography>
-
-              {/* Or Divider */}
-              <Box position="relative" my={2}>
-                <Divider />
-                <Typography
-                  variant="caption"
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    background: "#fff",
-                    px: 1,
-                    color: "text.secondary",
-                  }}
-                >
-                  Or
-                </Typography>
-              </Box>
-
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                textAlign="center"
-              >
-                Complete the registration following the link in your email
+                Check your email for an account activation link or contact your
+                administrator.
               </Typography>
             </motion.form>
           </Box>

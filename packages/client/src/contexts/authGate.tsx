@@ -2,19 +2,25 @@ import { useGetCurrentUserQuery } from "@/redux/auth/api/authApi";
 import { Box, CircularProgress } from "@mui/material";
 import { PropsWithChildren } from "react";
 import { Navigate } from "react-router-dom";
-export const AuthGate = ({ children }: PropsWithChildren) => {
-  const { data, isLoading, isError } = useGetCurrentUserQuery();
 
-  if (isLoading) {
+export const AuthGate = ({ children }: PropsWithChildren) => {
+  const { data, isLoading, isError, isFetching } = useGetCurrentUserQuery();
+
+  if (isLoading || isFetching) {
     return (
-      <Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
         <CircularProgress />
       </Box>
     );
   }
 
   if (isError || !data) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;

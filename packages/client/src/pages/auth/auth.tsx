@@ -63,11 +63,7 @@ export default function AuthPage() {
       >
         <Box p={6}>
           {/* Form */}
-          {isLogin ? (
-            <Login onToggle={() => setIsLogin(false)} />
-          ) : (
-            <Register />
-          )}
+          {isLogin ? <Login /> : <Register />}
         </Box>
 
         {/* Bottom decorative bar */}

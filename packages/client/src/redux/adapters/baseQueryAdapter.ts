@@ -14,8 +14,8 @@ export const baseQueryAdapter: BaseQueryFn<
         error: { message: result.value?.message ?? "Unknown service error" },
       };
     }
-
-    return { data: result.value };
+    const data = await service.execute(params);
+    return { data };
   } catch (error: any) {
     return {
       error: { message: error?.message ?? "Unknown fetch error" },

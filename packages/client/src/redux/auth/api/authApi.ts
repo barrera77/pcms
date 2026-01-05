@@ -38,6 +38,7 @@ export const authApi = api.injectEndpoints({
         service: meService,
       }),
       providesTags: [AuthTags.USER],
+      keepUnusedDataFor: 0,
     }),
 
     //REFRESH TOKEN

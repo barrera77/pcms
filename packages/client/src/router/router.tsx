@@ -6,19 +6,32 @@ import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <Login />,
-  },
-  {
     path: "/",
-    element: (
-      <Providers>
-        <AuthGate>
-          {" "}
-          <App />
-        </AuthGate>
-      </Providers>
-    ),
-    children: [],
+    element: <Providers />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "/",
+        element: (
+          <AuthGate>
+            <App />
+          </AuthGate>
+        ),
+        children: [
+          {
+            index: true,
+            element: (
+              <div>
+                <h1>Welcome to PCMS!</h1>
+                <p>Dashboard coming soon...</p>
+              </div>
+            ),
+          },
+        ],
+      },
+    ],
   },
 ]);

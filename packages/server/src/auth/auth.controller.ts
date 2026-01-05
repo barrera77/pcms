@@ -56,6 +56,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const refreshToken = req.cookies['refreshToken'];
+    const isProd = process.env.NODE_ENV === 'production';
 
     if (!refreshToken) {
       throw new UnauthorizedException('No refresh token');
@@ -70,14 +71,14 @@ export class AuthController {
     );
     res.cookie('accessToken', newTokens.accessToken, {
       httpOnly: true,
-      secure: true,
+      secure: isProd,
       sameSite: 'lax',
       maxAge: 1000 * 60 * 15,
     });
 
     res.cookie('refreshToken', newTokens.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: isProd,
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 1,
     });
@@ -89,9 +90,20 @@ export class AuthController {
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    const isProd = process.env.NODE_ENV === 'production';
 
-    return { message: 'Logged out succesfully' };
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: isProd,
+    });
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: isProd,
+    });
+
+    return { message: 'Logged out successfully' };
   }
 }
