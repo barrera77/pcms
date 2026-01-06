@@ -1,8 +1,39 @@
-import App from "@/App";
 import Login from "@/components/auth/login/Login";
+import Layout from "@/components/layout/components/Layout";
 import { AuthGate } from "@/contexts/authGate";
 import { Providers } from "@/Providers";
-import { createBrowserRouter } from "react-router-dom";
+import { useLogoutMutation } from "@/redux/auth/api/authApi";
+import {
+  createBrowserRouter,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+
+// Wrapper component to handle logout and current page
+function ProtectedLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Even if logout fails, redirect to login
+      navigate("/login");
+    }
+  };
+
+  return (
+    <Layout
+      currentPageName={location.pathname}
+      onLogout={handleLogout}
+      children={undefined}
+    />
+  );
+}
 
 export const router = createBrowserRouter([
   {
@@ -17,7 +48,7 @@ export const router = createBrowserRouter([
         path: "/",
         element: (
           <AuthGate>
-            <App />
+            <ProtectedLayout />
           </AuthGate>
         ),
         children: [
@@ -30,6 +61,15 @@ export const router = createBrowserRouter([
               </div>
             ),
           },
+          // Add more routes here as you build features
+          // {
+          //   path: "admin/employees",
+          //   element: <EmployeesPage />,
+          // },
+          // {
+          //   path: "admin/reports",
+          //   element: <ReportsPage />,
+          // },
         ],
       },
     ],
