@@ -62,7 +62,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
           sx={{
             width: 40,
             height: 40,
-            borderRadius: 2,
+            borderRadius: 1,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

@@ -3,7 +3,7 @@ import { authApi } from "@/redux/auth/api/authApi";
 export const logout = async () => {
   try {
     // Call the backend logout endpoint
-    await fetch("/api/auth/logout", { method: "POST" });
+    await fetch("auth/logout", { method: "POST" });
 
     // Reset RTK Query cache for auth
     authApi.util.resetApiState();

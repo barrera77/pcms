@@ -5,33 +5,37 @@ import { Providers } from "@/Providers";
 import { useLogoutMutation } from "@/redux/auth/api/authApi";
 import {
   createBrowserRouter,
+  Outlet,
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { api } from "@/redux/api/api";
+import { useAppDispatch } from "@/redux/hooks/hooks";
 
 // Wrapper component to handle logout and current page
 function ProtectedLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
     try {
       await logout().unwrap();
+      dispatch(api.util.resetApiState());
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
       // Even if logout fails, redirect to login
-      navigate("/login");
+      dispatch(api.util.resetApiState());
+      logout();
     }
   };
 
   return (
-    <Layout
-      currentPageName={location.pathname}
-      onLogout={handleLogout}
-      children={undefined}
-    />
+    <Layout currentPageName={location.pathname} onLogout={handleLogout}>
+      <Outlet />
+    </Layout>
   );
 }
 

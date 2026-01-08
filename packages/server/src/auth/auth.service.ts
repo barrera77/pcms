@@ -17,7 +17,6 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const { userName, password } = loginDto;
-
     const user = await this.userModel.findOne({ userName });
 
     if (!user || !user.hashedPassword || !user.isActivated) {
@@ -26,7 +25,6 @@ export class AuthService {
       );
     }
     const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
-
     if (!passwordMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -63,10 +61,17 @@ export class AuthService {
       role,
     };
 
-    const accessToken = this.jwtService.sign(payload);
+    const accessTokenExpiry =
+      this.configService.get<number>('JWT_ACCESS_EXPIRY') || 900;
+    const refreshTokenExpity =
+      this.configService.get<number>('JWT_REFRESH_EXPIRY') || 604800;
+
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: `${accessTokenExpiry}s`,
+    });
 
     const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<number>('JWT_EXPIRY'),
+      expiresIn: `${refreshTokenExpity}s`,
     });
 
     return { accessToken, refreshToken };
