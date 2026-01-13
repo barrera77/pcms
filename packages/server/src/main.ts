@@ -26,7 +26,12 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   //To ensure DTOs are validated automatically
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
 
   //Allow version the endpoints
   app.enableVersioning({
