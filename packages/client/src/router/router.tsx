@@ -14,7 +14,11 @@ export const router = createBrowserRouter([
     element: (
       <Providers>
         <AuthGate>
-          {" "}
+          <Providers>
+            <AuthGate>
+              <App />
+            </AuthGate>
+          </Providers>{" "}
           <App />
         </AuthGate>
       </Providers>

@@ -14,8 +14,7 @@ export const AuthGate = ({ children }: PropsWithChildren) => {
   }
 
   if (isError || !data) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
-
   return <>{children}</>;
 };

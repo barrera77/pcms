@@ -48,14 +48,13 @@ export class EmployeeService {
       .exec();
   }
 
-  async findById(id: string): Promise<Employee | null> {
+  async findById(id: string): Promise<Employee> {
     const employee = await this.employeeModel.findById(id).exec();
     if (!employee) {
-      throw new NotFoundException('City not found');
+      throw new NotFoundException('Employee not found');
     }
     return employee;
   }
-
   async findByIds(ids: string[]): Promise<EmployeeDocument[]> {
     return this.employeeModel.find({ _id: { $in: ids } }).exec();
   }

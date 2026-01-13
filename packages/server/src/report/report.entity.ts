@@ -17,20 +17,8 @@ export type ReportDocument = Report & Document;
 
 @Schema({ collection: 'report' })
 export class Report extends BaseEntity {
-  @Prop({ required: true })
-  date: string;
-
-  @Prop({ type: Types.ObjectId, ref: 'city', required: true })
-  cityId: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: 'building', required: true })
-  buildingId: Types.ObjectId;
-
-  @Prop({ required: true, type: String })
-  unit: string;
-
-  @Prop({ required: true, type: String })
-  workOrder: string;
+  @Prop({ type: Types.ObjectId, ref: 'job', required: true, unique: true })
+  jobId: Types.ObjectId;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Pest' }] })
   pestId: Types.ObjectId[];

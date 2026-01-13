@@ -10,8 +10,7 @@ export class ProductUsage {
   productId: Types.ObjectId;
 
   @Prop({ type: Number })
-  ConcentrationPercent: number;
-
+  concentrationPercent: number;
   @Prop({ type: String })
   quantity: string;
 }

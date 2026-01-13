@@ -28,7 +28,7 @@ export class PestService {
     return this.pestModel.find({ category }).exec();
   }
 
-  async findById(id: string): Promise<Pest | null> {
+  async findById(id: string): Promise<Pest> {
     const pest = await this.pestModel.findById(id).exec();
 
     if (!pest) {
@@ -36,7 +36,6 @@ export class PestService {
     }
     return pest;
   }
-
   async findByIds(ids: string[]): Promise<Pest[]> {
     return this.pestModel.find({ _id: { $in: ids } }).exec();
   }

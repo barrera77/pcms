@@ -5,36 +5,26 @@ import {
   type SeverityLevel,
   type TreatmentType,
 } from '@pcms/pcms-common';
+import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsMongoId,
-  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
 } from 'class-validator';
 import { ProductUsageDto } from 'src/product-usage/product-usage-output.dto';
 
 export class CreateReportDto {
-  @ApiProperty({ description: 'Date' })
-  @IsNotEmpty()
-  date: string;
-
-  @ApiProperty({ description: 'City' })
+  @ApiProperty({ description: 'Job Id' })
   @IsMongoId()
-  cityId: string;
-
-  @ApiProperty({ description: 'Building' })
-  @IsMongoId()
-  buildingId: string;
-
-  @ApiProperty({ description: 'unit' })
-  unit: string;
-
-  @ApiProperty({ description: 'WO' })
-  workOrder: string;
+  jobId: string;
 
   @ApiProperty({ description: 'Pest' })
-  @IsMongoId()
+  @IsMongoId({ each: true })
   @IsArray()
   @ArrayNotEmpty()
   pestId: string[];
@@ -44,6 +34,7 @@ export class CreateReportDto {
   treatmentType: TreatmentType[];
 
   @ApiProperty({ description: 'Treatment No.' })
+  @IsNumber()
   treatmentNo: number;
 
   @ApiProperty({ description: 'Severity' })
@@ -58,7 +49,7 @@ export class CreateReportDto {
   contractorCompany?: string;
 
   @ApiProperty({ description: 'Technicians' })
-  @IsMongoId()
+  @IsMongoId({ each: true })
   @IsArray()
   @ArrayNotEmpty()
   techIds: string[];
@@ -66,11 +57,15 @@ export class CreateReportDto {
   @ApiProperty({ description: 'Product Usage' })
   @IsArray()
   @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => ProductUsageDto)
   productUsage: ProductUsageDto[];
 
   @ApiProperty({ description: 'Notes' })
+  @IsString()
   notes: string;
 
   @ApiProperty({ description: 'Follow Up?' })
+  @IsBoolean()
   requiresFollowUp: boolean;
 }

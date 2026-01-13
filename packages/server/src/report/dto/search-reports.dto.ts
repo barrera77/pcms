@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsEnum, IsString, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ReportStatuses, type ReportStatus } from '@pcms/pcms-common';
+import { REPORT_SORT_FIELDS, type ReportSortField } from 'src/common/filters';
 
 export class SearchReportsDto {
   @ApiPropertyOptional()
@@ -63,12 +64,18 @@ export class SearchReportsDto {
   @IsString()
   pestId?: string;
 
-  @ApiPropertyOptional({ default: 'createdAt' })
+  @ApiPropertyOptional({
+    enum: REPORT_SORT_FIELDS,
+    default: 'createdAt',
+  })
   @IsOptional()
-  @IsString()
-  sortBy?: string = 'createdAt';
+  @IsEnum(REPORT_SORT_FIELDS)
+  sortBy?: ReportSortField = 'createdAt';
 
-  @ApiPropertyOptional({ enum: ['asc', 'desc'], default: 'desc' })
+  @ApiPropertyOptional({
+    enum: ['asc', 'desc'],
+    default: 'desc',
+  })
   @IsOptional()
   @IsEnum(['asc', 'desc'])
   sortOrder?: 'asc' | 'desc' = 'desc';

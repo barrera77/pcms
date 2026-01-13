@@ -69,14 +69,13 @@ export default function AuthPage() {
             <Register />
           )}
         </Box>
-
         {/* Bottom decorative bar */}
         <Box
           height={4}
           width="100%"
           sx={{
-            background:
-              "linear-gradient(to right, primary.main, primary.dark, secondary.main)",
+            background: (theme) =>
+              `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
           }}
         />
       </Paper>

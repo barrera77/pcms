@@ -22,14 +22,14 @@ export class CityService {
 
     return this.cityModel.create({
       ...dto,
-      province: dto.province,
+      provinceId: dto.province,
     });
   }
 
   async findAll(): Promise<City[]> {
     return this.cityModel
       .find()
-      .populate({ path: 'province', select: 'name' })
+      .populate({ path: 'provinceId', select: 'name' })
       .exec();
   }
 

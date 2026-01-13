@@ -39,11 +39,13 @@ export const Login = ({ onToggle }: LoginProps) => {
   } = useForm<LoginFormData>();
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       // simulate login request
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -53,7 +55,7 @@ export const Login = ({ onToggle }: LoginProps) => {
         navigate("/", { replace: true });
       }, 1000);
     } catch {
-      console.error("Login failed");
+      setErrorMessage("Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
