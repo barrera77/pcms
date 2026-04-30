@@ -57,16 +57,20 @@ export class AuthService {
 
   //Generate tokens
   generateTokens(userId: string, userName: string, role: string) {
-    const payload = {
-      sub: userId,
-      userName,
-      role,
-    };
+    const payload = { sub: userId, userName, role };
 
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: parseInt(
+        this.configService.get('JWT_ACCESS_EXPIRY') ?? '900',
+        10,
+      ),
+    });
 
     const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<number>('JWT_EXPIRY'),
+      expiresIn: parseInt(
+        this.configService.get('JWT_REFRESH_EXPIRY') ?? '86400',
+        10,
+      ),
     });
 
     return { accessToken, refreshToken };

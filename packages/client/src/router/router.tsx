@@ -1,28 +1,30 @@
 import App from "@/App";
-import Login from "@/components/auth/login/Login";
 import { AuthGate } from "@/contexts/authGate";
+import AuthPage from "@/pages/auth/auth";
+import Home from "@/pages/home/home";
 import { Providers } from "@/Providers";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+
+    element: <AuthPage />,
   },
   {
     path: "/",
     element: (
       <Providers>
         <AuthGate>
-          <Providers>
-            <AuthGate>
-              <App />
-            </AuthGate>
-          </Providers>{" "}
           <App />
         </AuthGate>
       </Providers>
     ),
-    children: [],
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+    ],
   },
 ]);

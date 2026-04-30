@@ -8,18 +8,18 @@ export default function AuthPage() {
 
   return (
     <Box
-      minHeight="100vh"
-      width="100%"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      position="relative"
-      bgcolor="grey.50"
-      px={2}
-      py={4}
+      sx={{
+        height: "100vh",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        bgcolor: "grey.50",
+        overflow: "hidden",
+      }}
     >
-      {/* Background abstract shapes */}
+      {/* Background blobs */}
       <Box
         sx={{
           position: "absolute",
@@ -34,6 +34,7 @@ export default function AuthPage() {
           pointerEvents: "none",
         }}
       />
+
       <Box
         sx={{
           position: "absolute",
@@ -49,7 +50,7 @@ export default function AuthPage() {
         }}
       />
 
-      {/* Auth card */}
+      {/* Card */}
       <Paper
         elevation={12}
         sx={{
@@ -59,20 +60,19 @@ export default function AuthPage() {
           overflow: "hidden",
           border: "1px solid",
           borderColor: "grey.100",
+          boxSizing: "border-box",
         }}
       >
-        <Box p={6}>
-          {/* Form */}
+        <Box p={3}>
           {isLogin ? (
             <Login onToggle={() => setIsLogin(false)} />
           ) : (
             <Register />
           )}
         </Box>
-        {/* Bottom decorative bar */}
+
         <Box
           height={4}
-          width="100%"
           sx={{
             background: (theme) =>
               `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
@@ -80,12 +80,16 @@ export default function AuthPage() {
         />
       </Paper>
 
-      {/* Footer */}
+      {/* Footer (fixed, no layout impact) */}
       <Typography
         variant="caption"
-        color="text.secondary"
-        mt={4}
-        textAlign="center"
+        sx={{
+          position: "absolute",
+          bottom: 12,
+          textAlign: "center",
+          width: "100%",
+          color: "text.secondary",
+        }}
       >
         &copy; {new Date().getFullYear()} Pest Control Management System. All
         rights reserved.

@@ -8,14 +8,7 @@ export const baseQueryAdapter: BaseQueryFn<
 > = async ({ service, params }) => {
   try {
     const result = await service.execute(params);
-
-    if (result.isError?.()) {
-      return {
-        error: { message: result.value?.message ?? "Unknown service error" },
-      };
-    }
-
-    return { data: result.value };
+    return { data: result };
   } catch (error: any) {
     return {
       error: { message: error?.message ?? "Unknown fetch error" },

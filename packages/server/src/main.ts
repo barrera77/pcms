@@ -12,7 +12,7 @@ import csurf from 'csurf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn'],
+    logger: ['error', 'warn', 'log'],
   });
 
   // Swagger setup
@@ -38,6 +38,13 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: VERSION_NEUTRAL,
   });
+
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  });
+
+  app.setGlobalPrefix('api');
 
   //Protect against common web attacks
   app.use(helmet());
