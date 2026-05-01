@@ -1,11 +1,7 @@
-import { useState } from "react";
 import { Box, Paper, Typography } from "@mui/material";
-import Register from "@/components/auth/register/register";
 import Login from "@/components/auth/login/Login";
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
-
   return (
     <Box
       sx={{
@@ -34,7 +30,6 @@ export default function AuthPage() {
           pointerEvents: "none",
         }}
       />
-
       <Box
         sx={{
           position: "absolute",
@@ -64,13 +59,8 @@ export default function AuthPage() {
         }}
       >
         <Box p={3}>
-          {isLogin ? (
-            <Login onToggle={() => setIsLogin(false)} />
-          ) : (
-            <Register />
-          )}
+          <Login />
         </Box>
-
         <Box
           height={4}
           sx={{
@@ -80,7 +70,6 @@ export default function AuthPage() {
         />
       </Paper>
 
-      {/* Footer (fixed, no layout impact) */}
       <Typography
         variant="caption"
         sx={{

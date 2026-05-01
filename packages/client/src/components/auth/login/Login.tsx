@@ -25,11 +25,7 @@ type LoginFormData = {
   rememberMe?: boolean;
 };
 
-type LoginProps = {
-  onToggle?: () => void;
-};
-
-export const Login = ({ onToggle }: LoginProps) => {
+export const Login = () => {
   const {
     register,
     handleSubmit,
@@ -51,7 +47,6 @@ export const Login = ({ onToggle }: LoginProps) => {
         password: data.password,
       }).unwrap();
       setShowSuccess(true);
-
       setTimeout(() => {
         navigate("/", { replace: true });
       }, 1000);
@@ -188,13 +183,7 @@ export const Login = ({ onToggle }: LoginProps) => {
             </AnimatePresence>
           </Button>
 
-          {onToggle && (
-            <Button variant="text" size="small" onClick={onToggle}>
-              Don't have an account? Register
-            </Button>
-          )}
-
-          <Box position="relative" my={2}>
+          <Box position="relative" my={1}>
             <Divider />
             <Typography
               variant="caption"
@@ -208,34 +197,13 @@ export const Login = ({ onToggle }: LoginProps) => {
                 color: "text.secondary",
               }}
             >
-              Or
+              No account?
             </Typography>
           </Box>
 
           <Typography variant="body2" color="text.secondary" textAlign="center">
-            Contact your admin to provide you a registration link
-          </Typography>
-
-          <Box position="relative" my={2}>
-            <Divider />
-            <Typography
-              variant="caption"
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                background: "#fff",
-                px: 1,
-                color: "text.secondary",
-              }}
-            >
-              Or
-            </Typography>
-          </Box>
-
-          <Typography variant="body2" color="text.secondary" textAlign="center">
-            Complete the registration following the link in your email
+            Contact your admin — they'll send you an activation link to get
+            started.
           </Typography>
         </motion.form>
       </Box>
