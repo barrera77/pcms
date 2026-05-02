@@ -61,9 +61,15 @@ export const Login = () => {
       animate={{ opacity: 1, y: 0 }}
       style={{ width: "100%" }}
     >
-      <Box px={4} display="flex" flexDirection="column" gap={3}>
+      <Box
+        px={{ xs: 1, sm: 4 }}
+        pt={{ xs: 4, sm: 0 }}
+        display="flex"
+        flexDirection="column"
+        gap={3}
+      >
         {/* Logo & Header */}
-        <Box textAlign="center" mb={4}>
+        <Box textAlign="center" mb={{ xs: 2, sm: 4 }}>
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -105,6 +111,8 @@ export const Login = () => {
           <TextField
             label="Email Address"
             fullWidth
+            autoComplete="email"
+            inputMode="email"
             {...register("userName", { required: "Email is required" })}
             error={!!errors.userName}
             helperText={errors.userName?.message}
@@ -123,6 +131,7 @@ export const Login = () => {
             label="Password"
             type="password"
             fullWidth
+            autoComplete="current-password"
             {...register("password", { required: "Password is required" })}
             error={!!errors.password}
             helperText={errors.password?.message}
@@ -139,7 +148,9 @@ export const Login = () => {
 
           <FormControlLabel
             control={<Checkbox {...register("rememberMe")} />}
-            label="Remember me for 30 days"
+            label={
+              <Typography variant="body2">Remember me for 30 days</Typography>
+            }
           />
 
           {errorMessage && (
@@ -153,7 +164,7 @@ export const Login = () => {
             variant="contained"
             size="large"
             disabled={isLoading || showSuccess}
-            sx={{ height: 48 }}
+            sx={{ height: { xs: 52, sm: 48 } }} // slightly taller tap target on mobile
           >
             <AnimatePresence mode="wait">
               {showSuccess ? (
@@ -195,6 +206,7 @@ export const Login = () => {
                 background: "#fff",
                 px: 1,
                 color: "text.secondary",
+                whiteSpace: "nowrap",
               }}
             >
               No account?

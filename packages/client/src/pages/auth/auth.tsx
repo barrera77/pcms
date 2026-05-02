@@ -1,64 +1,73 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Login from "@/components/auth/login/Login";
 
 export default function AuthPage() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       sx={{
-        height: "100vh",
+        minHeight: "100vh",
         width: "100%",
         display: "flex",
-        alignItems: "center",
+        alignItems: isMobile ? "flex-start" : "center",
         justifyContent: "center",
         position: "relative",
         bgcolor: "grey.50",
         overflow: "hidden",
       }}
     >
-      {/* Background blobs */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: "-10%",
-          left: "-10%",
-          width: "50%",
-          height: "50%",
-          bgcolor: "primary.main",
-          opacity: 0.05,
-          borderRadius: "50%",
-          filter: "blur(80px)",
-          pointerEvents: "none",
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: "-10%",
-          right: "-10%",
-          width: "50%",
-          height: "50%",
-          bgcolor: "secondary.main",
-          opacity: 0.05,
-          borderRadius: "50%",
-          filter: "blur(80px)",
-          pointerEvents: "none",
-        }}
-      />
+      {/* Background blobs — desktop only */}
+      {!isMobile && (
+        <>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "-10%",
+              left: "-10%",
+              width: "50%",
+              height: "50%",
+              bgcolor: "primary.main",
+              opacity: 0.05,
+              borderRadius: "50%",
+              filter: "blur(80px)",
+              pointerEvents: "none",
+            }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: "-10%",
+              right: "-10%",
+              width: "50%",
+              height: "50%",
+              bgcolor: "secondary.main",
+              opacity: 0.05,
+              borderRadius: "50%",
+              filter: "blur(80px)",
+              pointerEvents: "none",
+            }}
+          />
+        </>
+      )}
 
-      {/* Card */}
       <Paper
-        elevation={12}
+        elevation={isMobile ? 0 : 12}
         sx={{
           width: "100%",
-          maxWidth: 428,
-          borderRadius: 4,
+          maxWidth: { xs: "100%", sm: 428 },
+          minHeight: { xs: "100vh", sm: "auto" },
+          borderRadius: { xs: 0, sm: 4 },
           overflow: "hidden",
-          border: "1px solid",
+          border: { xs: "none", sm: "1px solid" },
           borderColor: "grey.100",
           boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <Box p={3}>
+        <Box p={{ xs: 2, sm: 3 }} flex={1}>
           <Login />
         </Box>
         <Box
@@ -70,19 +79,21 @@ export default function AuthPage() {
         />
       </Paper>
 
-      <Typography
-        variant="caption"
-        sx={{
-          position: "absolute",
-          bottom: 12,
-          textAlign: "center",
-          width: "100%",
-          color: "text.secondary",
-        }}
-      >
-        &copy; {new Date().getFullYear()} Pest Control Management System. All
-        rights reserved.
-      </Typography>
+      {!isMobile && (
+        <Typography
+          variant="caption"
+          sx={{
+            position: "absolute",
+            bottom: 12,
+            textAlign: "center",
+            width: "100%",
+            color: "text.secondary",
+          }}
+        >
+          &copy; {new Date().getFullYear()} Pest Control Management System. All
+          rights reserved.
+        </Typography>
+      )}
     </Box>
   );
 }
