@@ -1,4 +1,5 @@
 import { IProductUsage } from "lib/application/entities/product/product-usage";
+import { ReportStatus } from "lib/application/entities/report/report-status";
 import { SeverityLevel } from "lib/application/entities/report/severity";
 import { TreatmentType } from "lib/application/entities/report/treatment-type";
 
@@ -11,11 +12,16 @@ export interface IReport<T = string> {
   buildingId: T;
   unit: string;
   workOrder: string;
-  pestId: T;
+  pestId: T[];
   treatmentType: TreatmentType[];
   treatmentNo: number;
   severity: SeverityLevel;
+  performedBy: "in-house" | "contractor";
+  contractorCompany?: string;
   productsUsed: IProductUsage<T>[];
   notes: string;
   requiresFollowUp: boolean;
+  status: ReportStatus;
+  submittedAt?: Date;
+  submittedBy?: string;
 }

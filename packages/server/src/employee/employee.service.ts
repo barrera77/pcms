@@ -34,7 +34,7 @@ export class EmployeeService {
       .exec();
   }
 
-  async findByName(name: string): Promise<Employee | null> {
+  async findByName(name: string): Promise<EmployeeDocument | null> {
     return this.employeeModel
       .findOne({ name })
       .populate({ path: 'departmentId', select: 'name' })
@@ -46,6 +46,17 @@ export class EmployeeService {
       .findOne({ email })
       .populate({ path: 'departmentId', select: 'name' })
       .exec();
+  }
+
+  async findById(id: string): Promise<Employee> {
+    const employee = await this.employeeModel.findById(id).exec();
+    if (!employee) {
+      throw new NotFoundException('Employee not found');
+    }
+    return employee;
+  }
+  async findByIds(ids: string[]): Promise<EmployeeDocument[]> {
+    return this.employeeModel.find({ _id: { $in: ids } }).exec();
   }
 
   async findByRole(role: string): Promise<Employee[]> {

@@ -6,4 +6,6 @@ export interface IUser<T = string> extends IBaseEntity {
   userName: string;
   hashedPassword: string;
   role: UserRole;
+  isActivated: boolean;
+  activatedAt?: Date;
 }

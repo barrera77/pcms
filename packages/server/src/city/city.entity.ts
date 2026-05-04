@@ -11,7 +11,7 @@ export class City extends BaseEntity {
   name: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Province' })
-  province: Types.ObjectId | null;
+  provinceId: Types.ObjectId | null;
 }
 
 export const CitySchema = SchemaFactory.createForClass(City);

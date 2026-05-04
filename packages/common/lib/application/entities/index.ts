@@ -12,3 +12,4 @@ export * from "./inventory";
 export * from "./pest";
 export * from "./report";
 export * from "./supplier";
+export * from "./job";

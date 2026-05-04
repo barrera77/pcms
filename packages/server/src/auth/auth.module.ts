@@ -8,6 +8,7 @@ import { JwtRefreshTokenStrategy } from './strategies/jwtRefreshToken.strategy';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { UserModule } from 'src/user/user.module';
+import { JwtTwoFactorStrategy } from 'src/auth/strategies/jwtTwoFactor.strategy';
 
 @Module({
   imports: [
@@ -19,9 +20,6 @@ import { UserModule } from 'src/user/user.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<number>('JWT_EXPIRY'),
-        },
       }),
     }),
   ],
@@ -30,6 +28,7 @@ import { UserModule } from 'src/user/user.module';
     AuthService,
     JwtAccessTokenStrategy,
     JwtRefreshTokenStrategy,
+    JwtTwoFactorStrategy,
     RolesGuard,
   ],
 })

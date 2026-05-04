@@ -14,7 +14,7 @@ export class CityService {
   ) {}
 
   async create(dto: CreateCityDto): Promise<City> {
-    const province = await this.provinceService.findById(dto.provinceId);
+    const province = await this.provinceService.findById(dto.province);
 
     if (!province) {
       throw new NotFoundException('Province not found');
@@ -22,14 +22,21 @@ export class CityService {
 
     return this.cityModel.create({
       ...dto,
-      province: dto.provinceId,
+      provinceId: dto.province,
     });
   }
 
   async findAll(): Promise<City[]> {
     return this.cityModel
       .find()
-      .populate({ path: 'province', select: 'name' })
+      .populate({ path: 'provinceId', select: 'name' })
+      .exec();
+  }
+
+  async findByName(name: string): Promise<CityDocument | null> {
+    return this.cityModel
+      .findOne({ name })
+      .populate({ path: 'provinceId', select: 'name' })
       .exec();
   }
 

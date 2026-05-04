@@ -155,6 +155,17 @@ export class UserService {
     return { message: 'Activation email resent' };
   }
 
+  async unlockUser(id: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    user.failedLoginAttempts = 0;
+    user.lockedUntil = null;
+    await user.save();
+    return { message: 'User account unlocked successfully' };
+  }
+
   async findByEmail(email: string): Promise<UserDocument | null> {
     return this.userModel
       .findOne({ email })

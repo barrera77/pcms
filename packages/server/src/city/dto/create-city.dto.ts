@@ -11,5 +11,5 @@ export class CreateCityDto {
     description: 'MongoDB ID of the province this city belongs to',
   })
   @IsMongoId()
-  provinceId: string;
+  province: string;
 }

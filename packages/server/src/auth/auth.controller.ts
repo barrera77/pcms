@@ -6,18 +6,21 @@ import {
   UnauthorizedException,
   UseGuards,
   Res,
+  Get,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/auth/roles.decorator';
 import { AuthService } from 'src/auth/auth.service';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import type { CurrentUserPayload } from 'src/auth/current-user.decorator';
 import { LoginDto } from 'src/auth/dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle({ auth: { ttl: 900000, limit: 10 } })
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,
@@ -40,6 +43,12 @@ export class AuthController {
     });
 
     return { message: 'Login successful' };
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard('jwt-access'))
+  me(@CurrentUser() user: CurrentUserPayload) {
+    return user;
   }
 
   @UseGuards(AuthGuard('jwt-refresh'))

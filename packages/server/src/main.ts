@@ -12,7 +12,7 @@ import csurf from 'csurf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn'],
+    logger: ['error', 'warn', 'log'],
   });
 
   // Swagger setup
@@ -20,19 +20,32 @@ async function bootstrap() {
     .setTitle('PCMS API')
     .setDescription('Pest Control Management System')
     .setVersion('1.0')
+    .addServer('/api')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   //To ensure DTOs are validated automatically
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
 
   //Allow version the endpoints
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: VERSION_NEUTRAL,
   });
+
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  });
+
+  app.setGlobalPrefix('api');
 
   //Protect against common web attacks
   app.use(helmet());
