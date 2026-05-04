@@ -83,7 +83,7 @@ export class AuthService {
         },
         { expiresIn: 300 }, //5 mikes
       );
-      return { requiresTwoFactor: true, tempToken };
+      return { requiresTwoFactor: true as const, tempToken };
     }
 
     const tokens = this.generateTokens(
@@ -94,7 +94,7 @@ export class AuthService {
 
     return {
       message: 'Login successful',
-      requiresTwoFactor: false,
+      requiresTwoFactor: false as const,
       ...tokens,
     };
   }
