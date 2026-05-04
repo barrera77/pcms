@@ -26,23 +26,34 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const tokens = await this.authService.login(loginDto);
+    const result = await this.authService.login(loginDto);
 
-    res.cookie('accessToken', tokens.accessToken, {
+    // 2FA required — set challenge cookie, don't issue full tokens yet
+    if (result.requiresTwoFactor) {
+      res.cookie('twoFactorToken', result.tempToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 5, // 5 minutes
+      });
+      return { requiresTwoFactor: true, message: '2FA verification required' };
+    }
+
+    res.cookie('accessToken', result.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 1000 * 60 * 15,
     });
 
-    res.cookie('refreshToken', tokens.refreshToken, {
+    res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24 * 1,
+      maxAge: 1000 * 60 * 60 * 24,
     });
 
-    return { message: 'Login successful' };
+    return { message: 'Login successful', requiresTwoFactor: false };
   }
 
   @Get('me')
