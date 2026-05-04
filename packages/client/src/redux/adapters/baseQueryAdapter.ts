@@ -1,7 +1,7 @@
 import { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { ServiceCommand } from "@/app/application/domain/common/command/ServiceCommand";
 
-export const baseQueryAdapter: BaseQueryFn
+export const baseQueryAdapter: BaseQueryFn<
   { service: ServiceCommand<any, any>; params?: unknown },
   unknown,
   { message: string }
@@ -14,3 +14,4 @@ export const baseQueryAdapter: BaseQueryFn
       error: { message: error?.message ?? "Unknown fetch error" },
     };
   }
+};
