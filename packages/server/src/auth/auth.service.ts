@@ -45,7 +45,6 @@ export class AuthService {
     }
 
     const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
-
     if (!passwordMatch) {
       user.failedLoginAttempts = (user.failedLoginAttempts ?? 0) + 1;
 

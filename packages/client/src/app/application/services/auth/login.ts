@@ -27,4 +27,4 @@ export class Login extends BaseService<LoginResult, LoginParams> {
 }
 
 //Export singleton instance
-export const loginService = new Login("/api/auth/login");
+export const loginService = new Login("auth/login");

@@ -38,6 +38,10 @@ export const authApi = api.injectEndpoints({
         service: meService,
       }),
       providesTags: [AuthTags.USER],
+      keepUnusedDataFor: 0,
+      extraOptions: {
+        maxRetries: 0,
+      },
     }),
 
     //REFRESH TOKEN
@@ -52,7 +56,7 @@ export const authApi = api.injectEndpoints({
       query: () => ({
         service: logoutService,
       }),
-      invalidatesTags: [AuthTags.USER],
+      invalidatesTags: [],
     }),
   }),
 });

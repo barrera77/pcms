@@ -16,4 +16,4 @@ export class Logout extends BaseService<{ message: string }, void> {
   }
 }
 
-export const logoutService = new Logout("/api/auth/logout");
+export const logoutService = new Logout("auth/logout");
