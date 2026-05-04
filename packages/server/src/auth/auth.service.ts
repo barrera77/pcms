@@ -17,19 +17,53 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const { userName, password } = loginDto;
-
     const user = await this.userModel.findOne({ userName });
 
     if (!user || !user.hashedPassword || !user.isActivated) {
+      await bcrypt.compare(
+        password,
+        '$2b$10$invalidhashpadding000000000000000',
+      );
       throw new UnauthorizedException(
         'Invalid credentials or account not activated',
       );
     }
+
+    // Check if the account is locked
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      throw new UnauthorizedException(
+        'Account is locked. Try again later or contact your admin',
+      );
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
 
     if (!passwordMatch) {
-      throw new UnauthorizedException('Invalid credentials');
+      user.failedLoginAttempts = (user.failedLoginAttempts ?? 0) + 1;
+
+      if (user.failedLoginAttempts >= 3) {
+        user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 min lock
+        user.failedLoginAttempts = 0;
+        await user.save();
+        throw new UnauthorizedException(
+          'Account is temporarily locked. Try again later or contact your admin.',
+        );
+      }
+
+      await user.save();
+
+      const remaining = 3 - user.failedLoginAttempts;
+      throw new UnauthorizedException(
+        remaining <= 1
+          ? `Invalid credentials. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining before your account is locked.`
+          : 'Invalid credentials',
+      );
     }
+
+    // Successful login — reset lockout counters
+    user.failedLoginAttempts = 0;
+    user.lockedUntil = null;
+    await user.save();
 
     const tokens = this.generateTokens(
       user._id.toString(),
@@ -43,7 +77,7 @@ export class AuthService {
     };
   }
 
-  //Verify the refresToken
+  // Verify the refresh token
   async verifyRefreshtoken(refreshToken: string) {
     try {
       const decoded = this.jwtService.verify(refreshToken, {
@@ -55,7 +89,7 @@ export class AuthService {
     }
   }
 
-  //Generate tokens
+  // Generate tokens
   generateTokens(userId: string, userName: string, role: string) {
     const payload = { sub: userId, userName, role };
 

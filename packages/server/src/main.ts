@@ -20,6 +20,7 @@ async function bootstrap() {
     .setTitle('PCMS API')
     .setDescription('Pest Control Management System')
     .setVersion('1.0')
+    .addServer('/api')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

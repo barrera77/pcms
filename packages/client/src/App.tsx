@@ -7,7 +7,6 @@ const App = () => {
       sx={{
         backgroundColor: "background.default",
         color: "text.primary",
-        fontFamily: "Gilroy, Arial, sans-serif",
         minHeight: "100vh",
         width: "100%",
         p: 2,

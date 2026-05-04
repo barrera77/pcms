@@ -17,9 +17,23 @@ import { UserModule } from 'src/user/user.module';
 import { SupplierModule } from 'src/supplier/supplier.module';
 import { MailerModule } from '@nestjs-modules/mailer/dist/mailer.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        name: 'global',
+        ttl: 1000, // 1 minute window
+        limit: 30, // 30 requests per minute globally
+      },
+      {
+        name: 'auth',
+        ttl: 10000, // 15 minute window
+        limit: 5, // 5 attempts per 15 minutes for auth endpoints
+      },
+    ]),
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGODB_URI || ''),
     ProvinceModule,
@@ -38,6 +52,12 @@ import { AuthModule } from 'src/auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard, // applies globally to all routes
+    },
+  ],
 })
 export class AppModule {}

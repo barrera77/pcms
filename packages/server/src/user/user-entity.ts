@@ -28,6 +28,13 @@ export class User extends BaseEntity {
 
   @Prop({ type: Date })
   activatedAt?: Date;
+
+  //Lock after many unsuccesful attempts
+  @Prop({ type: Number, default: 0 })
+  failedLoginAttempts: number;
+
+  @Prop({ type: Date, default: null })
+  lockedUntil: Date | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

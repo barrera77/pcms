@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@mui/icons-material": "^7.3.6",
+    "@nestjs/throttler": "^6.5.0",
     "framer-motion": "^12.23.26",
     "react-hook-form": "^7.70.0",
     "react-icons": "^5.5.0"

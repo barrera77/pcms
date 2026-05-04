@@ -4,8 +4,6 @@ import {
   Box,
   TextField,
   Button,
-  Checkbox,
-  FormControlLabel,
   Divider,
   Typography,
   CircularProgress,
@@ -22,7 +20,6 @@ import { useLoginMutation } from "@/redux/auth/api/authApi";
 type LoginFormData = {
   userName: string;
   password: string;
-  rememberMe?: boolean;
 };
 
 export const Login = () => {
@@ -50,8 +47,21 @@ export const Login = () => {
       setTimeout(() => {
         navigate("/", { replace: true });
       }, 1000);
-    } catch {
-      setErrorMessage("Login failed. Please check your credentials.");
+    } catch (err: any) {
+      const message = err?.message ?? "";
+
+      if (message.includes("Too Many Requests")) {
+        setErrorMessage("Too many login attempts. Please try again later.");
+      } else if (
+        message.includes("temporarily locked") ||
+        message.includes("Account is locked")
+      ) {
+        setErrorMessage("Your account is locked. Please contact your admin.");
+      } else if (message) {
+        setErrorMessage(message);
+      } else {
+        setErrorMessage("Login failed. Please check your credentials.");
+      }
     }
   };
 
@@ -146,13 +156,6 @@ export const Login = () => {
             }}
           />
 
-          <FormControlLabel
-            control={<Checkbox {...register("rememberMe")} />}
-            label={
-              <Typography variant="body2">Remember me for 30 days</Typography>
-            }
-          />
-
           {errorMessage && (
             <Typography variant="body2" color="error" textAlign="center">
               {errorMessage}
@@ -164,7 +167,7 @@ export const Login = () => {
             variant="contained"
             size="large"
             disabled={isLoading || showSuccess}
-            sx={{ height: { xs: 52, sm: 48 } }} // slightly taller tap target on mobile
+            sx={{ height: { xs: 52, sm: 48 }, marginTop: 3 }}
           >
             <AnimatePresence mode="wait">
               {showSuccess ? (

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -71,6 +70,15 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findById(id);
+  }
+
+  @Patch(':id/unlock')
+  @ApiOperation({ summary: 'Unlock a locked user account' })
+  @ApiOkResponse({ description: 'User account unlocked successfully' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  unlock(@Param('id') id: string) {
+    console.log('unlock called', id);
+    return this.userService.unlockUser(id);
   }
 
   @Patch(':id')

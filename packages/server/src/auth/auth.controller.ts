@@ -14,11 +14,13 @@ import { AuthService } from 'src/auth/auth.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import type { CurrentUserPayload } from 'src/auth/current-user.decorator';
 import { LoginDto } from 'src/auth/dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle({ auth: { ttl: 900000, limit: 10 } })
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,
