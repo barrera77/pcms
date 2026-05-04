@@ -35,6 +35,13 @@ export class User extends BaseEntity {
 
   @Prop({ type: Date, default: null })
   lockedUntil: Date | null;
+
+  //2FA
+  @Prop({ type: String, default: null })
+  twoFactorSecret: string | null;
+
+  @Prop({ type: Boolean, default: false })
+  isTwoFactorEnabled: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
