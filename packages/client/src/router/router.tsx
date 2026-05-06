@@ -1,34 +1,71 @@
-import App from "@/App";
+import Login from "@/components/auth/login/Login";
+import Layout from "@/components/layout/components/Layout";
 import { AuthGate } from "@/contexts/authGate";
 import Activate from "@/pages/activation/Activate";
-import AuthPage from "@/pages/auth/auth";
 import Home from "@/pages/home/home";
 import { Providers } from "@/Providers";
-import { createBrowserRouter } from "react-router-dom";
+import { useLogoutMutation } from "@/redux/auth/api/authApi";
+import {
+  createBrowserRouter,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { api } from "@/redux/api/api";
+import { useAppDispatch } from "@/redux/hooks/hooks";
+import AuthPage from "@/pages/auth/auth";
+
+function ProtectedLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      dispatch(api.util.resetApiState());
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      dispatch(api.util.resetApiState());
+      logout();
+    }
+  };
+
+  return (
+    <Layout currentPageName={location.pathname} onLogout={handleLogout}>
+      <Outlet />
+    </Layout>
+  );
+}
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
-
-    element: <AuthPage />,
-  },
-  {
-    path: "/activate",
-    element: <Activate />,
-  },
-  {
     path: "/",
-    element: (
-      <Providers>
-        <AuthGate>
-          <App />
-        </AuthGate>
-      </Providers>
-    ),
+    element: <Providers />,
     children: [
       {
-        index: true,
-        element: <Home />,
+        path: "/login",
+        element: <AuthPage />,
+      },
+      {
+        path: "/activate",
+        element: <Activate />,
+      },
+      {
+        path: "/",
+        element: (
+          <AuthGate>
+            <ProtectedLayout />
+          </AuthGate>
+        ),
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+        ],
       },
     ],
   },

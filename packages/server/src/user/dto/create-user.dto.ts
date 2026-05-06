@@ -9,7 +9,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   userName: string;
 
-  @ApiProperty({ enum: UserRoles, default: UserRoles.VIEWER })
+  @ApiProperty({ enum: UserRoles })
   @IsEnum(UserRoles)
   role: UserRole;
 }

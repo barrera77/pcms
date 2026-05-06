@@ -13,7 +13,7 @@ import type { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import type { CurrentUserPayload } from 'src/auth/current-user.decorator';
-import { LoginDto } from 'src/auth/dto';
+import { LoginDto, TwoFactorCodeDto } from 'src/auth/dto';
 import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
@@ -69,6 +69,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const refreshToken = req.cookies['refreshToken'];
+    const isProd = process.env.NODE_ENV === 'production';
 
     if (!refreshToken) {
       throw new UnauthorizedException('No refresh token');
@@ -83,14 +84,14 @@ export class AuthController {
     );
     res.cookie('accessToken', newTokens.accessToken, {
       httpOnly: true,
-      secure: true,
+      secure: isProd,
       sameSite: 'lax',
       maxAge: 1000 * 60 * 15,
     });
 
     res.cookie('refreshToken', newTokens.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: isProd,
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 1,
     });
@@ -100,11 +101,72 @@ export class AuthController {
     };
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
+  @Post('2fa/setup')
+  async setupTwoFactor(@CurrentUser() user: CurrentUserPayload) {
+    return this.authService.setupTwoFactor(user.sub);
+  }
+
+  @UseGuards(AuthGuard('jwt-access'))
+  @Post('2fa/verify')
+  async verifyTwoFactor(
+    @CurrentUser() user: CurrentUserPayload,
+    @Body() dto: TwoFactorCodeDto,
+  ) {
+    return this.authService.verifyTwoFactor(user.sub, dto.code);
+  }
+
+  @UseGuards(AuthGuard('jwt-2fa-temp'))
+  @Post('2fa/validate')
+  async validateTwoFactor(
+    @CurrentUser() user: CurrentUserPayload,
+    @Body() dto: TwoFactorCodeDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.authService.validateTwoFactor(user.sub, dto.code);
+    const isProd = process.env.NODE_ENV === 'production';
+
+    res.clearCookie('twoFactorToken', {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+    });
+
+    res.cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 15,
+    });
+
+    res.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
+    return {
+      message: 'Login successful',
+    };
+  }
+
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    const isProd = process.env.NODE_ENV === 'production';
 
-    return { message: 'Logged out succesfully' };
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: isProd,
+    });
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: isProd,
+    });
+
+    return { message: 'Logged out successfully' };
   }
 }
