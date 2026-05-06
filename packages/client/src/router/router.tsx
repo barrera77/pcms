@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import { api } from "@/redux/api/api";
 import { useAppDispatch } from "@/redux/hooks/hooks";
+import AuthPage from "@/pages/auth/auth";
 
 function ProtectedLayout() {
   const location = useLocation();
@@ -45,11 +46,11 @@ export const router = createBrowserRouter([
     element: <Providers />,
     children: [
       {
-        path: "login",
-        element: <Login />,
+        path: "/login",
+        element: <AuthPage />,
       },
       {
-        path: "activate",
+        path: "/activate",
         element: <Activate />,
       },
       {

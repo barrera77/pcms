@@ -18,7 +18,6 @@ export class User extends BaseEntity {
     type: String,
     enum: Object.values(UserRoles),
     required: true,
-    default: UserRoles.VIEWER,
   })
   role: UserRole;
 

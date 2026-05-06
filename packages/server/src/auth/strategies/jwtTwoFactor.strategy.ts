@@ -24,7 +24,7 @@ export class JwtTwoFactorStrategy extends PassportStrategy(
       throw new UnauthorizedException('Invalid token type');
     }
     return {
-      userId: payload.sub,
+      sub: payload.sub,
       userName: payload.userName,
       role: payload.role,
     };
