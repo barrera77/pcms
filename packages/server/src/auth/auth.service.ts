@@ -86,17 +86,16 @@ export class AuthService {
       return { requiresTwoFactor: true as const, tempToken };
     }
 
-    const tokens = this.generateTokens(
-      user._id.toString(),
-      user.userName,
-      user.role,
+    const setupToken = this.jwtService.sign(
+      {
+        sub: user._id.toString(),
+        userName: user.userName,
+        role: user.role,
+        type: '2fa-setup',
+      },
+      { expiresIn: 600 }, //10 mikes
     );
-
-    return {
-      message: 'Login successful',
-      requiresTwoFactor: false as const,
-      ...tokens,
-    };
+    return { requiresTwoFactorSetup: true as const, setupToken };
   }
 
   // Verify the refresh token

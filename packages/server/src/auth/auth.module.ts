@@ -9,6 +9,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { UserModule } from 'src/user/user.module';
 import { JwtTwoFactorStrategy } from 'src/auth/strategies/jwtTwoFactor.strategy';
+import { JwtTwoFactorSetupStrategy } from 'src/auth/strategies/jwtTwoFactorSetup.strategy';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { JwtTwoFactorStrategy } from 'src/auth/strategies/jwtTwoFactor.strategy'
     JwtAccessTokenStrategy,
     JwtRefreshTokenStrategy,
     JwtTwoFactorStrategy,
+    JwtTwoFactorSetupStrategy,
     RolesGuard,
   ],
 })

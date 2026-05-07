@@ -39,21 +39,15 @@ export class AuthController {
       return { requiresTwoFactor: true, message: '2FA verification required' };
     }
 
-    res.cookie('accessToken', result.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 15,
-    });
-
-    res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24,
-    });
-
-    return { message: 'Login successful', requiresTwoFactor: false };
+    if (result.requiresTwoFactorSetup) {
+      res.cookie('twoFactorSetupToken', result.setupToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 100 * 60 * 10,
+      });
+      return { requiresTwoFactorSetup: true, message: '2FA setup required' };
+    }
   }
 
   @Get('me')
@@ -101,13 +95,13 @@ export class AuthController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt-access'))
+  @UseGuards(AuthGuard(['jwt-access', 'jwt-2fa-setup']))
   @Post('2fa/setup')
   async setupTwoFactor(@CurrentUser() user: CurrentUserPayload) {
     return this.authService.setupTwoFactor(user.sub);
   }
 
-  @UseGuards(AuthGuard('jwt-access'))
+  @UseGuards(AuthGuard(['jwt-access', 'jwt-2fa-setup']))
   @Post('2fa/verify')
   async verifyTwoFactor(
     @CurrentUser() user: CurrentUserPayload,
