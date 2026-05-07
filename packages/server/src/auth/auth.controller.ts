@@ -44,7 +44,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 100 * 60 * 10,
+        maxAge: 1000 * 60 * 10,
       });
       return { requiresTwoFactorSetup: true, message: '2FA setup required' };
     }
