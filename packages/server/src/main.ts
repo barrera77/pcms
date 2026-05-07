@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import csurf from 'csurf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -21,6 +20,7 @@ async function bootstrap() {
     .setDescription('Pest Control Management System')
     .setVersion('1.0')
     .addServer('/api')
+    .addCookieAuth('twoFactorSetupToken')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
