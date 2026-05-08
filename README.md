@@ -15,6 +15,7 @@
 PCMS was born from real-world frustration with inadequate management tools. As a pest control supervisor, I experienced firsthand the inefficiencies of using generic property management software (Yardi) for specialized pest control operations.
 
 **The Problem:**
+
 - Technicians lack proper tools for field reporting
 - No centralized system for treatment scheduling and tracking
 - Inventory management is manual and error-prone
@@ -28,6 +29,7 @@ This system provides pest control teams with a mobile-first application tailored
 ## Key Features
 
 ### For Technicians
+
 - **Mobile-First Design** - Allows field personnel to create treatment reports directly from their mobile
 - **Time Tracking** - Clock in/out per treatment for accurate time management
 - **Smart Scheduling** - View and manage treatment schedules with follow-up reminders
@@ -35,14 +37,16 @@ This system provides pest control teams with a mobile-first application tailored
 - **Service Reports** - Create service reports with ease
 
 ### For Supervisors & Management
+
 - **Analytics Dashboard** - Track pest trends by area, building, and time period
 - **Inventory Management** - Monitor product usage and equipment assignments
 - **Personnel Management** - Onboard employees and manage user access
 - **Hierarchical Data Access** - Role-based filtering (building managers see only their buildings)
 
 ### Technical Highlights
-- **Secure Authentication** - JWT-based auth with email activation workflow
-- **Monorepo Architecture** - Organized codebase with shared types
+
+- **Secure Authentication** - JWT-based auth with httpOnly cookies, email activation workflow, and TOTP-based two-factor authentication
+- **Monorepo Architecture** - Organized codebase with shared types across client and server
 - **Test Coverage** - Unit and E2E testing with Vitest and Playwright
 - **API Documentation** - Auto-generated Swagger/OpenAPI docs
 - **Accessibility** - WCAG compliant, keyboard navigable
@@ -52,26 +56,30 @@ This system provides pest control teams with a mobile-first application tailored
 ## Tech Stack
 
 ### Backend
+
 - **Framework:** NestJS (Node.js)
 - **Language:** TypeScript
 - **Database:** MongoDB with Mongoose ODM
-- **Authentication:** JWT (JSON Web Tokens)
+- **Authentication:** JWT (httpOnly cookies) with TOTP-based 2FA (otplib + qrcode)
 - **Email:** @nestjs-modules/mailer with Ethereal (dev) / SMTP (prod)
 - **Validation:** class-validator, class-transformer
-- **Security:** Helmet, CSRF protection, bcrypt
+- **Security:** Helmet, bcrypt, AES-256 secret encryption
 - **Documentation:** Swagger/OpenAPI
 
-### Frontend *(Coming Soon)*
+### Frontend
+
 - **Framework:** React 18 with Vite
 - **Language:** TypeScript
 - **UI Library:** Material-UI (MUI)
 - **State Management:** Redux Toolkit
-- **API Client:** RTK Query / TanStack Query
+- **API Client:** RTK Query
 - **Forms:** React Hook Form
-- **Tables:** Tanstack
+- **Animation:** Framer Motion
+- **Tables:** TanStack Table
 - **PWA:** Workbox for offline capabilities
 
 ### Testing & DevOps
+
 - **Unit Tests:** Vitest
 - **E2E Tests:** Playwright
 - **Linting:** ESLint + Prettier
@@ -81,19 +89,26 @@ This system provides pest control teams with a mobile-first application tailored
 
 ## Development Progress
 
-### Phase 1: Backend Foundation (35% Complete)
-**User & Employee Management**
+### ✅ Phase 1: Foundation & Authentication (Complete)
+
+**Backend — User & Employee Management**
+
 - [x] Department entity with CRUD operations
 - [x] Employee entity with department relationships
 - [x] User registration with email activation flow
-- [x] JWT token generation and validation
+- [x] JWT token generation and validation (access + refresh tokens)
+- [x] httpOnly cookie-based token storage
+- [x] Refresh token rotation
 - [x] Email service integration (activation emails)
 - [x] Password hashing with bcrypt
-- [ ] JWT authentication guards (JwtAuthGuard)
-- [ ] Role-based authorization guards (RolesGuard)
-- [ ] Refresh token mechanism
+- [x] JWT authentication guards (access, refresh, 2fa-setup, 2fa-temp strategies)
+- [x] Role-based authorization guards
+- [x] Account lockout after failed login attempts
+- [x] TOTP-based two-factor authentication (setup + enforcement)
+- [x] AES-256 encryption for stored 2FA secrets
 
-**Static Entities** (Admin/Supervisor Managed)
+**Backend — Static Entities** (Admin/Supervisor Managed)
+
 - [x] Province entity
 - [x] City entity (belongs to Province)
 - [x] Area/Region entity (belongs to City)
@@ -102,15 +117,32 @@ This system provides pest control teams with a mobile-first application tailored
 - [x] Product entity (pesticides, materials)
 - [x] Equipment entity (with maintenance tracking)
 
+**Frontend — Auth Foundation**
+
+- [x] React 18 + Vite + TypeScript setup
+- [x] Redux Toolkit with RTK Query integration
+- [x] Domain-driven service layer (BaseService / HttpClient pattern)
+- [x] Axios instance with automatic token refresh on 401
+- [x] Login page with rate limit and lockout error handling
+- [x] Two-factor authentication setup page (QR code enrollment)
+- [x] Two-factor authentication challenge page (TOTP code entry)
+- [x] Protected route guard (AuthGate)
+- [x] Shared auth layout component
+
 **Testing Infrastructure**
+
 - [ ] Vitest setup and configuration
 - [ ] Unit test examples (services)
 - [ ] E2E test examples (controllers)
 - [ ] Test database setup/teardown utilities
 - [ ] CI/CD pipeline (GitHub Actions)
 
+---
+
 ### Phase 2: Core Business Logic (Not Started)
+
 **Treatment Reports** (Core Feature!)
+
 - [ ] Treatment report entity with immutability rules
 - [ ] File upload support (photos/attachments)
 - [ ] Clock in/out functionality
@@ -121,6 +153,7 @@ This system provides pest control teams with a mobile-first application tailored
 - [ ] Supervisor override capabilities
 
 **Scheduling System**
+
 - [ ] Schedule entity with time windows
 - [ ] Recurring schedule support (follow-ups every 2 weeks)
 - [ ] Building inspection reminders (every 3-4 months)
@@ -128,6 +161,7 @@ This system provides pest control teams with a mobile-first application tailored
 - [ ] Tech assignment and coordination
 
 **Inventory Management**
+
 - [ ] Inventory item entity with stock levels
 - [ ] Inventory transaction tracking
 - [ ] Product usage recording (linked to treatments)
@@ -137,7 +171,10 @@ This system provides pest control teams with a mobile-first application tailored
 - [ ] Cost tracking for supply restocks (PPE, products)
 - [ ] Invoice/receipt attachment support
 
+---
+
 ### Phase 3: Permissions & Data Scope (Not Started)
+
 - [ ] Implement hierarchical data filtering by role
 - [ ] Viewer sees only their buildings/areas
 - [ ] Tech sees all city data
@@ -145,16 +182,19 @@ This system provides pest control teams with a mobile-first application tailored
 - [ ] Audit logging (who changed what, when)
 - [ ] Data export permissions
 
+---
+
 ### Phase 4: Frontend MVP (Not Started)
-- [ ] React app setup with Vite + TypeScript
-- [ ] Authentication flow (login, logout, token refresh)
+
 - [ ] Mobile-responsive treatment report form
 - [ ] Schedule calendar view
 - [ ] Clock in/out interface
-- [ ] Admin panel for entity management (12 entities)
-- [ ] Redux store with RTK Query integration
+- [ ] Admin panel for entity management
+
+---
 
 ### Phase 5: Analytics & Polish (Not Started)
+
 - [ ] Dashboard with charts (pest trends, product usage)
 - [ ] Advanced filtering and search
 - [ ] PDF/Excel report exports
@@ -168,6 +208,7 @@ This system provides pest control teams with a mobile-first application tailored
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - MongoDB instance (local or Atlas)
 - Git
@@ -175,35 +216,39 @@ This system provides pest control teams with a mobile-first application tailored
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/pcms.git
    cd pcms
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment variables**
-   
+
    Create a `.env` file in the `packages/server` directory:
+
    ```env
    # Database
    MONGODB_URI=mongodb://localhost:27017/pcms
-   
+
    # JWT Secrets (generate with: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))")
    JWT_SECRET=your-super-secret-jwt-key-here
-   JWT_EXPIRY=3600
+   JWT_ACCESS_EXPIRY=900
+   JWT_REFRESH_EXPIRY=86400
    JWT_ACTIVATION_SECRET=your-activation-secret-here
    JWT_ACTIVATION_EXPIRY=48h
-   
+
    # SMTP Email Configuration
    SMTP_HOST=smtp.ethereal.email
    SMTP_PORT=587
    SMTP_USER=your-ethereal-email@ethereal.email
    SMTP_PASS=your-ethereal-password
-   
+
    # Application
    PORT=3000
    NODE_ENV=development
@@ -211,12 +256,14 @@ This system provides pest control teams with a mobile-first application tailored
    ```
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    ```
 
 5. **Access the application**
-   - API: `http://localhost:3000`
+   - Frontend: `http://localhost:5173`
+   - API: `http://localhost:3000/api`
    - Swagger Documentation: `http://localhost:3000/api`
 
 ---
@@ -226,27 +273,41 @@ This system provides pest control teams with a mobile-first application tailored
 ```
 pcms/
 ├── packages/
-│   ├── server/              # NestJS Backend
+│   ├── server/                  # NestJS Backend
 │   │   ├── src/
-│   │   │   ├── auth/        # Authentication module
-│   │   │   ├── user/        # User management
-│   │   │   ├── employee/    # Employee management
-│   │   │   ├── department/  # Department management
-│   │   │   ├── treatment/   # Treatment reports (coming soon)
-│   │   │   ├── schedule/    # Scheduling (coming soon)
-│   │   │   ├── inventory/   # Inventory (coming soon)
-│   │   │   ├── mailer/      # Email service
-│   │   │   ├── common/      # Shared utilities, entities
-│   │   │   └── main.ts      # Application entry point
-│   │   └── test/            # E2E tests
+│   │   │   ├── auth/            # Authentication module (JWT, 2FA, guards)
+│   │   │   ├── user/            # User management
+│   │   │   ├── employee/        # Employee management
+│   │   │   ├── department/      # Department management
+│   │   │   ├── treatment/       # Treatment reports (coming soon)
+│   │   │   ├── schedule/        # Scheduling (coming soon)
+│   │   │   ├── inventory/       # Inventory (coming soon)
+│   │   │   ├── mailer/          # Email service
+│   │   │   ├── common/          # Shared utilities, entities
+│   │   │   └── main.ts          # Application entry point
+│   │   └── test/                # E2E tests
 │   │
-│   ├── client/              # React Frontend (coming soon)
+│   ├── client/                  # React Frontend
+│   │   └── src/
+│   │       ├── app/
+│   │       │   ├── application/ # Domain services (login, logout, 2fa, etc.)
+│   │       │   └── infra/       # HttpClient (Axios + refresh interceptor)
+│   │       ├── components/
+│   │       │   ├── auth/        # Login form, shared AuthLayout
+│   │       │   └── layout/      # App shell, navigation, sidebar
+│   │       ├── contexts/        # AuthGate (protected route wrapper)
+│   │       ├── pages/
+│   │       │   ├── auth/        # AuthPage, TwoFaSetupPage, TwoFaChallengePage
+│   │       │   ├── activation/  # Account activation page
+│   │       │   └── home/        # Dashboard home
+│   │       ├── redux/           # Store, RTK Query API, auth slice
+│   │       └── router/          # React Router config
 │   │
-│   └── common/              # Shared types and interfaces
+│   └── common/                  # Shared types and interfaces
 │       └── lib/
-|           └── application/
-│           ├── entities/  # TypeScript interfaces
-│           └── helpers/   # helper methods
+│           └── application/
+│               ├── entities/    # TypeScript interfaces
+│               └── helpers/     # Helper methods
 │
 ├── .gitignore
 ├── package.json
@@ -280,46 +341,62 @@ Once the server is running, visit `http://localhost:3000/api` to explore the int
 
 ### Key Endpoints (Current)
 
-#### Authentication & Users
-- `POST /user` - Create new user (sends activation email)
-- `POST /user/activate` - Activate user account with token + password
-- `POST /user/resend-activation` - Resend activation email
-- `GET /user` - List all users (admin only)
-- `GET /user/:id` - Get user by ID
+#### Authentication
+
+- `POST /api/auth/login` - Login with credentials (sets httpOnly cookie)
+- `POST /api/auth/logout` - Clear session cookies
+- `POST /api/auth/refresh` - Rotate access token using refresh cookie
+- `GET /api/auth/me` - Get current authenticated user
+- `POST /api/auth/2fa/setup` - Generate TOTP secret and QR code
+- `POST /api/auth/2fa/verify` - Confirm QR scan and enable 2FA
+- `POST /api/auth/2fa/validate` - Submit TOTP code during login
+
+#### Users
+
+- `POST /api/user` - Create new user (sends activation email)
+- `POST /api/user/activate` - Activate account with token + password
+- `POST /api/user/resend-activation` - Resend activation email
+- `GET /api/user` - List all users (admin only)
+- `GET /api/user/:id` - Get user by ID
 
 #### Employees
-- `POST /employee` - Create employee
-- `GET /employee` - List all employees (with department populated)
-- `GET /employee/:id` - Get employee details
-- `PATCH /employee/:id` - Update employee
-- `DELETE /employee/:id` - Soft delete employee
+
+- `POST /api/employee` - Create employee
+- `GET /api/employee` - List all employees (with department populated)
+- `GET /api/employee/:id` - Get employee details
+- `PATCH /api/employee/:id` - Update employee
+- `DELETE /api/employee/:id` - Soft delete employee
 
 #### Departments
-- `POST /department` - Create department
-- `GET /department` - List all departments
-- `GET /department/:id` - Get department details
-- `PATCH /department/:id` - Update department
-- `DELETE /department/:id` - Soft delete department
+
+- `POST /api/department` - Create department
+- `GET /api/department` - List all departments
+- `GET /api/department/:id` - Get department details
+- `PATCH /api/department/:id` - Update department
+- `DELETE /api/department/:id` - Soft delete department
 
 ... etc.
+
 ---
 
 ## Roadmap
 
-See the [GitHub Projects board](https://github.com/yourusername/pcms/projects/1) for detailed task tracking and progress (Working in updating it).
+See the [GitHub Projects board](https://github.com/yourusername/pcms/projects/1) for detailed task tracking and progress.
 
-**Upcoming Milestones:**
-- **Milestone 1:** Backend Foundation - User/Employee management, static entities
-- **Milestone 2:** Core Business Logic - Treatment reports, scheduling, inventory
-- **Milestone 3:** Permissions & Data Scope - Role-based access, hierarchical filtering
-- **Milestone 4:** Frontend MVP - React app with core features
-- **Milestone 5:** Analytics & Production - Dashboards, reports, deployment
+**Milestones:**
+
+- **✅ Milestone 1:** Foundation & Authentication — backend auth with 2FA, frontend auth flow
+- **Milestone 2:** Core Business Logic — treatment reports, scheduling, inventory
+- **Milestone 3:** Permissions & Data Scope — role-based access, hierarchical filtering
+- **Milestone 4:** Frontend MVP — treatment forms, scheduling UI, admin panel
+- **Milestone 5:** Analytics & Production — dashboards, reports, deployment
 
 ---
 
 ## Contributing
 
-I am a noob dev and this is a personal portfolio project, but feedback and suggestions are always welcome! Feel free to:
+This is a personal portfolio project, but feedback and suggestions are always welcome! Feel free to:
+
 - Open an issue for bugs or feature requests
 - Submit a pull request with improvements
 - Star the repo if you find it interesting
@@ -335,6 +412,7 @@ This project is licensed under the MIT License
 ## Author
 
 **Manuel Alva < Д />**
+
 - Portfolio: https://portfolio-react-v1-phi.vercel.app/
 - LinkedIn: www.linkedin.com/in/manuel-alva-770809
 - GitHub: https://github.com/barrera77
@@ -351,11 +429,11 @@ This project is licensed under the MIT License
 
 ## Screenshots
 
-*Coming soon once the frontend is developed!*
+_Coming soon!_
 
 ---
 
-**Note:** This is an active development project. The backend is currently ~35% complete with user management and basic entity structure in place. Frontend development will begin after backend completion.
+**Note:** Phase 1 is complete. The full authentication layer is in place on both backend and frontend, including TOTP-based two-factor authentication. Development is now moving into Phase 2: core business logic.
 
 ---
 
