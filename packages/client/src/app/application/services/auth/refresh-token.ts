@@ -17,4 +17,4 @@ export class RefreshToken extends BaseService<{ message: string }, void> {
 }
 
 //Export singleton instance
-export const refreshTokenService = new RefreshToken("/api/auth/refresh");
+export const refreshTokenService = new RefreshToken("auth/refresh");

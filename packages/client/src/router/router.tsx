@@ -1,4 +1,3 @@
-import Login from "@/components/auth/login/Login";
 import Layout from "@/components/layout/components/Layout";
 import { AuthGate } from "@/contexts/authGate";
 import Activate from "@/pages/activation/Activate";
@@ -13,7 +12,9 @@ import {
 } from "react-router-dom";
 import { api } from "@/redux/api/api";
 import { useAppDispatch } from "@/redux/hooks/hooks";
-import AuthPage from "@/pages/auth/auth";
+import AuthPage from "@/pages/auth/AuthPage";
+import TwoFaSetupPage from "@/pages/auth/TwoFaSetupPage";
+import TwoFaChallengePage from "@/pages/auth/TwoFaChallenagePage";
 
 function ProtectedLayout() {
   const location = useLocation();
@@ -48,6 +49,14 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <AuthPage />,
+      },
+      {
+        path: "/2fa/setup",
+        element: <TwoFaSetupPage />,
+      },
+      {
+        path: "/2fa/challenge",
+        element: <TwoFaChallengePage />,
       },
       {
         path: "/activate",

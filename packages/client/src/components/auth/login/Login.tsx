@@ -43,10 +43,20 @@ export const Login = () => {
         userName: data.userName,
         password: data.password,
       }).unwrap();
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate("/", { replace: true });
-      }, 1000);
+
+      const result = await login({
+        userName: data.userName,
+        password: data.password,
+      }).unwrap();
+
+      if (result.requiresTwoFactorSetup) {
+        navigate("/2fa/setup", { replace: true });
+      } else if (result.requiresTwoFactor) {
+        navigate("/2fa/challenge", { replace: true });
+      } else {
+        setShowSuccess(true);
+        setTimeout(() => navigate("/", { replace: true }), 1000);
+      }
     } catch (err: any) {
       const message = err?.message ?? "";
 
