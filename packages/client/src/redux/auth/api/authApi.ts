@@ -2,6 +2,12 @@ import { loginService } from "@/app/application/services/auth/login";
 import { logoutService } from "@/app/application/services/auth/logout";
 import { meService } from "@/app/application/services/auth/me";
 import { refreshTokenService } from "@/app/application/services/auth/refresh-token";
+import {
+  TwoFaSetupResult,
+  twoFaSetupService,
+} from "@/app/application/services/auth/twofa-setup";
+import { twoFaValidateService } from "@/app/application/services/auth/twofa-validate";
+import { twoFaVerifyService } from "@/app/application/services/auth/twofa-verify";
 import { api } from "@/redux/api/api";
 import { AuthTags } from "@/redux/auth/types/tags";
 import type { UserRole } from "@pcms/pcms-common";
@@ -13,6 +19,8 @@ interface LoginRequest {
 
 interface LoginResponse {
   message: string;
+  requiresTwoFactor: boolean;
+  requiresTwoFactorSetup: boolean;
 }
 
 interface User {
@@ -58,6 +66,18 @@ export const authApi = api.injectEndpoints({
       }),
       invalidatesTags: [],
     }),
+
+    twoFaSetup: builder.mutation<TwoFaSetupResult, void>({
+      query: () => ({ service: twoFaSetupService }),
+    }),
+
+    twoFaVerify: builder.mutation<{ message: string }, { code: string }>({
+      query: (params) => ({ service: twoFaVerifyService, params }),
+    }),
+
+    twoFaValidate: builder.mutation<{ message: string }, { code: string }>({
+      query: (params) => ({ service: twoFaValidateService, params }),
+    }),
   }),
 });
 
@@ -66,4 +86,7 @@ export const {
   useGetCurrentUserQuery,
   useRefreshTokenMutation,
   useLogoutMutation,
+  useTwoFaSetupMutation,
+  useTwoFaVerifyMutation,
+  useTwoFaValidateMutation,
 } = authApi;

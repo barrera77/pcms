@@ -18,7 +18,7 @@ export interface HttpResponse<T = any> {
 
 export class HttpClient {
   private api: AxiosInstance;
-  private baseUrl = "http://localhost:3000/";
+  private baseUrl = "http://localhost:3000/api/";
 
   constructor() {
     this.api = axios.create({
@@ -37,7 +37,6 @@ export class HttpClient {
           _retry?: boolean;
         };
 
-        // 🔒 Guard conditions
         const is401 = error.response?.status === 401;
         const isAuthRoute =
           originalRequest?.url?.includes("/auth/login") ||
@@ -52,13 +51,11 @@ export class HttpClient {
           originalRequest._retry = true;
 
           try {
-            // ✅ Use SAME axios instance config (important)
             await this.api.post("/auth/refresh");
 
             // Retry original request
             return this.api(originalRequest);
           } catch {
-            // ❌ Refresh failed → logout
             window.location.href = "/login";
             return Promise.reject(error);
           }

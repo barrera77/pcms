@@ -8,6 +8,8 @@ export interface LoginParams {
 
 export interface LoginResult {
   message: string;
+  requiresTwoFactor: boolean;
+  requiresTwoFactorSetup: boolean;
 }
 
 export class Login extends BaseService<LoginResult, LoginParams> {
@@ -27,4 +29,4 @@ export class Login extends BaseService<LoginResult, LoginParams> {
 }
 
 //Export singleton instance
-export const loginService = new Login("/api/auth/login");
+export const loginService = new Login("auth/login");

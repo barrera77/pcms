@@ -24,4 +24,4 @@ export class Me extends BaseService<MeResult, void> {
 }
 
 //Export singleton instance
-export const meService = new Me("/api/auth/me");
+export const meService = new Me("auth/me");

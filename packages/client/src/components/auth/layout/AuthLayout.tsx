@@ -1,7 +1,11 @@
 import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
-import Login from "@/components/auth/login/Login";
+import { ReactNode } from "react";
 
-export default function AuthPage() {
+interface AuthLayoutProps {
+  children: ReactNode;
+}
+
+export default function AuthLayout({ children }: AuthLayoutProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -18,7 +22,6 @@ export default function AuthPage() {
         overflow: "hidden",
       }}
     >
-      {/* Background blobs — desktop only */}
       {!isMobile && (
         <>
           <Box
@@ -68,7 +71,7 @@ export default function AuthPage() {
         }}
       >
         <Box p={{ xs: 2, sm: 3 }} flex={1}>
-          <Login />
+          {children}
         </Box>
         <Box
           height={4}
