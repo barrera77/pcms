@@ -15,11 +15,13 @@ import { CurrentUser } from 'src/auth/current-user.decorator';
 import type { CurrentUserPayload } from 'src/auth/current-user.decorator';
 import { LoginDto, TwoFactorCodeDto } from 'src/auth/dto';
 import { Throttle } from '@nestjs/throttler';
+import { Public } from 'src/auth/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Throttle({ auth: { ttl: 900000, limit: 10 } })
   @Post('login')
   async login(
@@ -56,6 +58,7 @@ export class AuthController {
     return user;
   }
 
+  @Public()
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
   async refreshToken(
@@ -95,12 +98,14 @@ export class AuthController {
     };
   }
 
+  @Public()
   @UseGuards(AuthGuard(['jwt-access', 'jwt-2fa-setup']))
   @Post('2fa/setup')
   async setupTwoFactor(@CurrentUser() user: CurrentUserPayload) {
     return this.authService.setupTwoFactor(user.sub);
   }
 
+  @Public()
   @UseGuards(AuthGuard(['jwt-access', 'jwt-2fa-setup']))
   @Post('2fa/verify')
   async verifyTwoFactor(
@@ -110,6 +115,7 @@ export class AuthController {
     return this.authService.verifyTwoFactor(user.sub, dto.code);
   }
 
+  @Public()
   @UseGuards(AuthGuard('jwt-2fa-temp'))
   @Post('2fa/validate')
   async validateTwoFactor(
@@ -145,6 +151,7 @@ export class AuthController {
     };
   }
 
+  @Public()
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
     const isProd = process.env.NODE_ENV === 'production';
