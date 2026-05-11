@@ -15,6 +15,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 import { DepartmentService } from 'src/department/department.service';
 import { CreateDepartmentDto } from 'src/department/dto/create-department.dto';
 import { DepartmentDto } from 'src/department/dto/department-output.dto';
@@ -25,6 +27,7 @@ import { UpdateDepartmentDto } from 'src/department/dto/update-department.dto';
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 
+  @Roles(UserRoles.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Add a department' })
   @ApiCreatedResponse({
@@ -51,6 +54,7 @@ export class DepartmentController {
     return this.departmentService.findById(id);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a department' })
   @ApiOkResponse({
@@ -61,6 +65,7 @@ export class DepartmentController {
     return this.departmentService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate department' })
   @ApiOkResponse({ description: 'Department marked as inactive succesfully' })

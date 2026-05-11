@@ -15,6 +15,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 import { CreateEquipmentDto } from 'src/equipment/dto/create-equipment.dto';
 import { EquipmentDto } from 'src/equipment/dto/equipment-outpu.dto';
 import { UpdateEquipmentDto } from 'src/equipment/dto/update-equipment.dto';
@@ -25,6 +27,7 @@ import { EquipmentService } from 'src/equipment/equipment.service';
 export class EquipmentController {
   constructor(private readonly equipmentService: EquipmentService) {}
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Post()
   @ApiOperation({ summary: 'Add a Equipment item' })
   @ApiCreatedResponse({
@@ -66,6 +69,7 @@ export class EquipmentController {
     return this.equipmentService.findByName(name);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Patch(':id')
   @ApiOperation({ summary: 'Update an equipment item' })
   @ApiOkResponse({ description: 'Equipment item updated succesfully' })
@@ -74,6 +78,7 @@ export class EquipmentController {
     return this.equipmentService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ summary: 'Deactivate equipment item' })
   @ApiOkResponse({

@@ -16,6 +16,9 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
+import { Public } from 'src/auth/public.decorator';
+import { Roles } from 'src/auth/roles.decorator';
 import { ActivateUserDto } from 'src/user/dto/activate-user.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { ResendActivationDto } from 'src/user/dto/resend-user-activation.dto';
@@ -28,6 +31,7 @@ import { UserService } from 'src/user/user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Roles(UserRoles.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Add a user' })
   @ApiCreatedResponse({
@@ -38,6 +42,8 @@ export class UserController {
     return this.userService.create(dto);
   }
 
+  //At this moment new users have no password, no account access, no JWT cookie
+  @Public()
   @Post('activate')
   @ApiOperation({ summary: 'Activate a user account' })
   @ApiOkResponse({ description: 'Account activated successfully' })
@@ -46,6 +52,7 @@ export class UserController {
     return this.userService.activateUser(dto);
   }
 
+  @Public()
   @Post('resend-activation')
   @ApiOperation({ summary: 'Resend activation email' })
   @ApiOkResponse({ description: 'Activation email resent successfully' })
@@ -56,6 +63,12 @@ export class UserController {
     return this.userService.resendActivation(dto.email);
   }
 
+  @Roles(
+    UserRoles.ADMIN,
+    UserRoles.EXECUTIVE,
+    UserRoles.MANAGER,
+    UserRoles.SUPERVISOR,
+  )
   @Get()
   @ApiOperation({ summary: 'List all users' })
   @ApiOkResponse({
@@ -67,11 +80,18 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Roles(
+    UserRoles.ADMIN,
+    UserRoles.EXECUTIVE,
+    UserRoles.MANAGER,
+    UserRoles.SUPERVISOR,
+  )
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findById(id);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Patch(':id/unlock')
   @ApiOperation({ summary: 'Unlock a locked user account' })
   @ApiOkResponse({ description: 'User account unlocked successfully' })
@@ -81,6 +101,7 @@ export class UserController {
     return this.userService.unlockUser(id);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiOkResponse({
@@ -91,6 +112,7 @@ export class UserController {
     return this.userService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate user' })
   @ApiOkResponse({ description: 'User marked as inactive succesfully' })

@@ -15,6 +15,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 import { CreateProductDto } from 'src/product/dto/create-product.dto';
 import { ProductDto } from 'src/product/dto/product-output.dto';
 import { UpdateProductDto } from 'src/product/dto/update-product.dto';
@@ -25,6 +27,7 @@ import { ProductService } from 'src/product/product.service';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Post()
   @ApiOperation({ summary: 'Add a Product' })
   @ApiCreatedResponse({
@@ -66,6 +69,7 @@ export class ProductController {
     return this.productService.findByName(name);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a product' })
   @ApiOkResponse({
@@ -76,6 +80,7 @@ export class ProductController {
     return this.productService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate product' })
   @ApiOkResponse({ description: 'Product marked as inactive succesfully' })

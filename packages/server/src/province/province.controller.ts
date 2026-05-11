@@ -15,6 +15,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 import { CreateProvinceDto } from 'src/province/dto/create-province.dto';
 import { ProvinceDto } from 'src/province/dto/province-output.dto';
 import { UpdateProvinceDto } from 'src/province/dto/update-province.dto';
@@ -25,6 +27,7 @@ import { ProvinceService } from 'src/province/province.service';
 export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}
 
+  @Roles(UserRoles.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Add a province' })
   @ApiCreatedResponse({
@@ -51,6 +54,7 @@ export class ProvinceController {
     return this.provinceService.findById(id);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a province' })
   @ApiOkResponse({
@@ -61,6 +65,7 @@ export class ProvinceController {
     return this.provinceService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate province' })
   @ApiOkResponse({ description: 'Province marked as inactive succesfully' })

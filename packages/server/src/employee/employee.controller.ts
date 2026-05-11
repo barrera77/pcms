@@ -16,6 +16,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 import { CreateEmployeeDto } from 'src/employee/dto/create-employee.dto';
 import { EmployeeDto } from 'src/employee/dto/employee-output.dto';
 import { UpdateEmployeeDto } from 'src/employee/dto/update-employee.dto';
@@ -26,6 +28,7 @@ import { EmployeeService } from 'src/employee/employee.service';
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
+  @Roles(UserRoles.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Add employees' })
   @ApiCreatedResponse({
@@ -36,6 +39,12 @@ export class EmployeeController {
     return this.employeeService.create(dto);
   }
 
+  @Roles(
+    UserRoles.ADMIN,
+    UserRoles.EXECUTIVE,
+    UserRoles.MANAGER,
+    UserRoles.SUPERVISOR,
+  )
   @Get()
   @ApiOperation({ summary: 'List all employees' })
   @ApiOkResponse({ description: 'List of employees', type: [EmployeeDto] })
@@ -44,6 +53,12 @@ export class EmployeeController {
     return this.employeeService.findAll();
   }
 
+  @Roles(
+    UserRoles.ADMIN,
+    UserRoles.EXECUTIVE,
+    UserRoles.MANAGER,
+    UserRoles.SUPERVISOR,
+  )
   @Get(':name')
   @ApiOperation({ summary: 'List of employees by name' })
   @ApiOkResponse({
@@ -54,6 +69,12 @@ export class EmployeeController {
     return this.employeeService.findByName(name);
   }
 
+  @Roles(
+    UserRoles.ADMIN,
+    UserRoles.EXECUTIVE,
+    UserRoles.MANAGER,
+    UserRoles.SUPERVISOR,
+  )
   @Get(':role')
   @ApiOperation({ summary: 'List of employees by role' })
   @ApiOkResponse({
@@ -64,6 +85,7 @@ export class EmployeeController {
     return this.employeeService.findByRole(role);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Update an employee' })
   @ApiOkResponse({ description: 'Employee updated succesfully' })
@@ -72,6 +94,7 @@ export class EmployeeController {
     return this.employeeService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ summary: 'Deactivate employee' })
   @ApiOkResponse({ description: 'Employee marked as inactive successfully' })

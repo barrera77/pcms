@@ -18,12 +18,15 @@ import {
 import { CreateCityDto } from 'src/city/dto/create-city.dto';
 import { CityDto } from 'src/city/dto/city-output.dto';
 import { UpdateCityDto } from 'src/city/dto/update-city.dto';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('Cities')
 @Controller('city')
 export class CityController {
   constructor(private readonly cityService: CityService) {}
 
+  @Roles(UserRoles.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Add a city ' })
   @ApiCreatedResponse({
@@ -41,6 +44,7 @@ export class CityController {
     return this.cityService.findAll();
   }
 
+  @Roles(UserRoles.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a city' })
   @ApiOkResponse({
@@ -51,6 +55,7 @@ export class CityController {
     return this.cityService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate city' })
   @ApiOkResponse({ description: 'City marked as inactive succesfully' })

@@ -21,12 +21,15 @@ import { CreateBuildingDto } from 'src/building/dto/create-building.dto';
 import { UpdateBuildingDto } from 'src/building/dto/update-building.dto';
 import { BuildingDto } from 'src/building/dto/building-output.dto';
 import { Building } from 'src/building/building.entity';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('Buildings')
 @Controller('building')
 export class BuildingController {
   constructor(private readonly buildingService: BuildingService) {}
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Post()
   @ApiOperation({ summary: 'Add a building' })
   @ApiCreatedResponse({
@@ -70,6 +73,7 @@ export class BuildingController {
     return this.buildingService.findByArea(area);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a building' })
   @ApiOkResponse({
@@ -86,6 +90,7 @@ export class BuildingController {
     return this.buildingService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ description: 'Deactivate building' })
   @ApiOkResponse({ description: 'Building marked as inactive succesfully' })

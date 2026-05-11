@@ -15,6 +15,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
+import { Roles } from 'src/auth/roles.decorator';
 import { CreatePestDto } from 'src/pest/dto/create-pest.dto';
 import { PestDto } from 'src/pest/dto/pest-output.dto';
 import { UpdatePestDto } from 'src/pest/dto/update-pest.dto';
@@ -25,6 +27,7 @@ import { PestService } from 'src/pest/pest.service';
 export class PestController {
   constructor(private readonly pestService: PestService) {}
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Post()
   @ApiOperation({ summary: 'Add a pest' })
   @ApiCreatedResponse({
@@ -66,6 +69,7 @@ export class PestController {
     return this.pestService.findByName(category);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.SUPERVISOR)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a pest' })
   @ApiOkResponse({ description: 'Pest updated usccesfully' })
@@ -74,6 +78,7 @@ export class PestController {
     return this.pestService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ summary: 'Deactivate a pest' })
   @ApiOkResponse({ description: 'Pest marked as inactive successfully' })

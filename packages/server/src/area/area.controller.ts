@@ -14,16 +14,19 @@ import {
   ApiNotFoundResponse,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
+import { UserRoles } from '@pcms/pcms-common';
 import { AreaService } from 'src/area/area.service';
 import { AreaDto } from 'src/area/dto/area-output.dto';
 import { CreateAreaDto } from 'src/area/dto/create-area.dto';
 import { UpdateAreaDto } from 'src/area/dto/update-area.dto';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('Area')
 @Controller('area')
 export class AreaController {
   constructor(private readonly areaService: AreaService) {}
 
+  @Roles(UserRoles.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Create a new area' })
   @ApiCreatedResponse({
@@ -51,6 +54,7 @@ export class AreaController {
     return this.areaService.findById(id);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Update an existing area' })
   @ApiOkResponse({
@@ -61,6 +65,7 @@ export class AreaController {
     return this.areaService.update(id, dto);
   }
 
+  @Roles(UserRoles.ADMIN)
   @Delete(':id')
   @ApiOperation({ summary: 'Soft delete an area' })
   @ApiOkResponse({ description: 'Area marked as inactive successfully' })
