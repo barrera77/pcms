@@ -12,7 +12,8 @@ import {
   createHash,
   randomBytes,
 } from 'crypto';
-import { generateSecret, generateURI, verifySync } from 'otplib';
+
+import { generateSecret, generateURI, verify } from 'otplib';
 import { toDataURL } from 'qrcode';
 
 @Injectable()
@@ -162,9 +163,9 @@ export class AuthService {
     }
 
     const secret = this.decryptSecret(user.twoFactorSecret);
-    const result = verifySync({ secret, token: code });
+    const isValid = verify({ token: code, secret });
 
-    if (!result.valid) {
+    if (!isValid) {
       throw new UnauthorizedException('Invalid 2FA code. Please try again.');
     }
 
@@ -182,9 +183,9 @@ export class AuthService {
     }
 
     const secret = this.decryptSecret(user.twoFactorSecret);
-    const result = verifySync({ secret, token: code });
+    const isValid = verify({ secret, token: code });
 
-    if (!result.valid) {
+    if (!isValid) {
       throw new UnauthorizedException('Invalid 2FA code. Please try again.');
     }
 
