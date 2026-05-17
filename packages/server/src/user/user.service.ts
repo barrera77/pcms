@@ -124,7 +124,9 @@ export class UserService {
       throw new BadRequestException('Invalid token purpose');
     }
 
-    const user = await this.userModel.findOne({ userName: payload.email });
+    const user = await this.userModel
+      .findOne({ userName: payload.email })
+      .exec();
 
     if (!user || user.isActivated) {
       throw new BadRequestException('Invalid or already activated account');
@@ -139,7 +141,7 @@ export class UserService {
   }
 
   async resendActivation(email: string) {
-    const user = await this.userModel.findOne({ userName: email });
+    const user = await this.userModel.findOne({ userName: email }).exec();
 
     if (!user || user.isActivated) {
       throw new BadRequestException('Invalid or already activated account');
@@ -156,7 +158,7 @@ export class UserService {
   }
 
   async unlockUser(id: string) {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id).exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }
