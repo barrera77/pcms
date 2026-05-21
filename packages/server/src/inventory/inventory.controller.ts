@@ -46,16 +46,6 @@ export class InventoryController {
     return this.inventoryService.findAll();
   }
 
-  @Get(':name')
-  @ApiOperation({ summary: 'List of inventory items by name' })
-  @ApiOkResponse({
-    description: 'List of inventory items by name returned succesfully',
-  })
-  @ApiNotFoundResponse({ description: 'Inventory item not found' })
-  findByName(@Param('name') name: string) {
-    return this.inventoryService.findByName(name);
-  }
-
   @Get('low-stock')
   @ApiOperation({ summary: 'Get inventory items with low stock' })
   @ApiOkResponse({
@@ -63,6 +53,16 @@ export class InventoryController {
   })
   checkLowStock() {
     return this.inventoryService.checkLowStock();
+  }
+
+  @Get(':itemId')
+  @ApiOperation({ summary: 'List of inventory items by item Id' })
+  @ApiOkResponse({
+    description: 'Inventory item returned succesfully',
+  })
+  @ApiNotFoundResponse({ description: 'Inventory item not found' })
+  findByItemId(@Param('itemId') itemId: string) {
+    return this.inventoryService.findByItemId(itemId);
   }
 
   @Patch(':id')

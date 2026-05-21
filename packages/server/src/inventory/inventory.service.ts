@@ -20,20 +20,11 @@ export class InventoryService {
     private equipmentService: EquipmentService,
   ) {}
 
-  //This may need to be reqorked as I have no idea what did I do
   async create(dto: CreateInventoryDto): Promise<Inventory> {
     if (dto.itemType === 'product') {
-      const product = await this.productService.findById(dto.itemId);
-
-      if (!product) {
-        throw new NotFoundException('Product not found');
-      }
+      await this.productService.findById(dto.itemId);
     } else if (dto.itemType === 'equipment') {
-      const equipment = await this.equipmentService.findById(dto.itemId);
-
-      if (!equipment) {
-        throw new NotFoundException('Equipment item not found');
-      }
+      await this.equipmentService.findById(dto.itemId);
     }
     const existingInventory = await this.inventoryModel.findOne({
       itemId: dto.itemId,
@@ -48,29 +39,24 @@ export class InventoryService {
     return this.inventoryModel.create(dto);
   }
 
-  //TODO: need to make sure this is the correct approach
   async findAll(): Promise<any[]> {
     const inventory = await this.inventoryModel.find().lean().exec();
 
     return Promise.all(
       inventory.map(async (item) => {
-        let refDoc;
+        let itemDetails;
         if (item.itemType === 'product') {
-          refDoc = await this.inventoryModel
-            .findById(item.itemId)
-            .lean()
-            .exec();
-        } else if (item.itemId === 'equipment') {
-          refDoc = await this.inventoryModel.find().lean().exec();
+          itemDetails = await this.productService.findById(item.itemId);
+        } else if (item.itemType === 'equipment') {
+          itemDetails = await this.equipmentService.findById(item.itemId);
         }
-        return { ...item, itemDetails: refDoc };
+        return { ...item, itemDetails };
       }),
     );
   }
 
-  //TODO: I feel this is also wrong, need a more complex query since I only have ids in the entity
-  async findByName(name: string): Promise<Inventory | null> {
-    return this.inventoryModel.findOne({ name }).exec();
+  async findByItemId(itemId: string): Promise<Inventory | null> {
+    return this.inventoryModel.findOne({ itemId }).exec();
   }
 
   async findById(id: string): Promise<Inventory> {
@@ -81,21 +67,10 @@ export class InventoryService {
     return inventoryItem;
   }
 
-  async updateInventoryItem(id: string): Promise<Inventory> {
-    const inventoryItem = await this.inventoryModel
-      .findByIdAndUpdate(id)
-      .exec();
-
-    if (!inventoryItem) {
-      throw new NotFoundException(`Inventory with ID ${id} not found`);
-    }
-    return inventoryItem;
-  }
-
   async update(id: string, dto: UpdateInventoryDto): Promise<Inventory> {
-    const inventory = await this.inventoryModel
-      .findByIdAndUpdate(id, dto, { new: true })
-      .exec();
+    const inventory = await this.inventoryModel.findByIdAndUpdate(id, dto, {
+      new: true,
+    });
 
     if (!inventory) {
       throw new NotFoundException(`Inventory with ID ${id} not found`);
