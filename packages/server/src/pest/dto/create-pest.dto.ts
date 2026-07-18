@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PestCategories } from '@pcms/pcms-common';
+import type { PestCategory } from '@pcms/pcms-common';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePestDto {
@@ -7,8 +9,11 @@ export class CreatePestDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ description: 'Category to which this pest belongs to' })
-  category: string;
+  @ApiProperty({
+    description: 'Category to which this pest belongs to',
+    enum: PestCategories,
+  })
+  category: PestCategory;
 
   @ApiProperty({ description: 'Description' })
   description: string;

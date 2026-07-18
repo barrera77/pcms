@@ -1,4 +1,4 @@
-import { PestCategory } from "lib/application/entities/pest/pest-categories";
+import type { PestCategory } from "lib/pcms-core";
 import { IBaseEntity } from "lib/pcms-core";
 
 export interface IPest<T = string> extends IBaseEntity {
